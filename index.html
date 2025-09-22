@@ -238,24 +238,26 @@
         }
 
         /* Jersey/Shorts Size Grid */
-        .size-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        .size-section {
             margin-top: 10px;
         }
 
-        .size-category h4 {
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #000;
+        .size-category {
+            margin-bottom: 15px;
         }
 
-        .size-options {
+        .size-category strong {
+            font-size: 14px;
+            font-weight: bold;
+            color: #000;
+            margin-right: 10px;
+        }
+
+        .size-options-inline {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
+            margin-top: 5px;
         }
 
         .size-option {
@@ -269,15 +271,20 @@
             height: 16px;
         }
 
-        /* Status Section */
-        .status-options {
+        .size-option label {
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        /* Player Type Options */
+        .player-type-options {
             display: flex;
             flex-direction: column;
             gap: 10px;
             margin-top: 10px;
         }
 
-        .status-option {
+        .player-type-option {
             display: flex;
             align-items: center;
             gap: 8px;
@@ -287,15 +294,42 @@
             background: #f8f9fa;
         }
 
-        .status-option input[type="radio"] {
+        .player-type-option input[type="radio"] {
             width: 16px;
             height: 16px;
         }
 
-        .status-option label {
+        .player-type-option label {
             font-weight: normal;
             cursor: pointer;
             flex: 1;
+        }
+
+        /* Returning Player Details */
+        .returning-player-details {
+            margin-bottom: 15px;
+        }
+
+        .returning-player-details strong {
+            font-size: 14px;
+            color: #000;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* Refund Policy */
+        .refund-policy {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .refund-policy p {
+            margin: 0;
+            font-size: 14px;
+            text-align: center;
         }
 
         /* Conditional Fields */
@@ -619,47 +653,47 @@
 
                     <!-- Jersey Size -->
                     <div class="form-group">
-                        <label>Jersey Size <span class="required">*</span></label>
-                        <div class="size-grid">
+                        <label><strong>JERSEY (CIRCLE)</strong> <span class="required">*</span></label>
+                        <div class="size-section">
                             <div class="size-category">
-                                <h4>Youth</h4>
-                                <div class="size-options">
+                                <strong>YTH:</strong>
+                                <div class="size-options-inline">
                                     <div class="size-option">
-                                        <input type="radio" id="jersey-youth-s" name="jerseySize" value="Youth S">
-                                        <label for="jersey-youth-s">S</label>
+                                        <input type="radio" id="jersey-youth-s" name="jerseySize" value="S (4-6)">
+                                        <label for="jersey-youth-s">S (4-6)</label>
                                     </div>
                                     <div class="size-option">
-                                        <input type="radio" id="jersey-youth-m" name="jerseySize" value="Youth M">
-                                        <label for="jersey-youth-m">M</label>
+                                        <input type="radio" id="jersey-youth-m" name="jerseySize" value="M (8-10)">
+                                        <label for="jersey-youth-m">M (8-10)</label>
                                     </div>
                                     <div class="size-option">
-                                        <input type="radio" id="jersey-youth-l" name="jerseySize" value="Youth L">
-                                        <label for="jersey-youth-l">L</label>
+                                        <input type="radio" id="jersey-youth-l" name="jerseySize" value="L (12-14)">
+                                        <label for="jersey-youth-l">L (12-14)</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="size-category">
-                                <h4>Adult</h4>
-                                <div class="size-options">
+                                <strong>ADLT:</strong>
+                                <div class="size-options-inline">
                                     <div class="size-option">
-                                        <input type="radio" id="jersey-adult-s" name="jerseySize" value="Adult S">
-                                        <label for="jersey-adult-s">S</label>
+                                        <input type="radio" id="jersey-adult-s" name="jerseySize" value="S (30-32)">
+                                        <label for="jersey-adult-s">S (30-32)</label>
                                     </div>
                                     <div class="size-option">
-                                        <input type="radio" id="jersey-adult-m" name="jerseySize" value="Adult M">
-                                        <label for="jersey-adult-m">M</label>
+                                        <input type="radio" id="jersey-adult-m" name="jerseySize" value="M (34-36)">
+                                        <label for="jersey-adult-m">M (34-36)</label>
                                     </div>
                                     <div class="size-option">
-                                        <input type="radio" id="jersey-adult-l" name="jerseySize" value="Adult L">
-                                        <label for="jersey-adult-l">L</label>
+                                        <input type="radio" id="jersey-adult-l" name="jerseySize" value="L (38-40)">
+                                        <label for="jersey-adult-l">L (38-40)</label>
                                     </div>
                                     <div class="size-option">
-                                        <input type="radio" id="jersey-adult-xl" name="jerseySize" value="Adult XL">
-                                        <label for="jersey-adult-xl">XL</label>
+                                        <input type="radio" id="jersey-adult-xl" name="jerseySize" value="XL (42-44)">
+                                        <label for="jersey-adult-xl">XL (42-44)</label>
                                     </div>
                                     <div class="size-option">
-                                        <input type="radio" id="jersey-adult-xxl" name="jerseySize" value="Adult XXL">
-                                        <label for="jersey-adult-xxl">XXL</label>
+                                        <input type="radio" id="jersey-adult-xxl" name="jerseySize" value="XXL (46-48)">
+                                        <label for="jersey-adult-xxl">XXL (46-48)</label>
                                     </div>
                                 </div>
                             </div>
@@ -668,89 +702,96 @@
 
                     <!-- Shorts Size -->
                     <div class="form-group">
-                        <label>Shorts Size <span class="required">*</span></label>
-                        <div class="size-grid">
+                        <label><strong>SHORTS (CIRCLE)</strong> <span class="required">*</span></label>
+                        <div class="size-section">
                             <div class="size-category">
-                                <h4>Youth</h4>
-                                <div class="size-options">
+                                <strong>YTH:</strong>
+                                <div class="size-options-inline">
                                     <div class="size-option">
-                                        <input type="radio" id="shorts-youth-s" name="shortsSize" value="Youth S">
-                                        <label for="shorts-youth-s">S</label>
+                                        <input type="radio" id="shorts-youth-s" name="shortsSize" value="S (4-6)">
+                                        <label for="shorts-youth-s">S (4-6)</label>
                                     </div>
                                     <div class="size-option">
-                                        <input type="radio" id="shorts-youth-m" name="shortsSize" value="Youth M">
-                                        <label for="shorts-youth-m">M</label>
+                                        <input type="radio" id="shorts-youth-m" name="shortsSize" value="M (8-10)">
+                                        <label for="shorts-youth-m">M (8-10)</label>
                                     </div>
                                     <div class="size-option">
-                                        <input type="radio" id="shorts-youth-l" name="shortsSize" value="Youth L">
-                                        <label for="shorts-youth-l">L</label>
+                                        <input type="radio" id="shorts-youth-l" name="shortsSize" value="L (12-14)">
+                                        <label for="shorts-youth-l">L (12-14)</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="size-category">
-                                <h4>Adult</h4>
-                                <div class="size-options">
+                                <strong>ADLT:</strong>
+                                <div class="size-options-inline">
                                     <div class="size-option">
-                                        <input type="radio" id="shorts-adult-s" name="shortsSize" value="Adult S">
-                                        <label for="shorts-adult-s">S</label>
+                                        <input type="radio" id="shorts-adult-s" name="shortsSize" value="S (30-32)">
+                                        <label for="shorts-adult-s">S (30-32)</label>
                                     </div>
                                     <div class="size-option">
-                                        <input type="radio" id="shorts-adult-m" name="shortsSize" value="Adult M">
-                                        <label for="shorts-adult-m">M</label>
+                                        <input type="radio" id="shorts-adult-m" name="shortsSize" value="M (34-36)">
+                                        <label for="shorts-adult-m">M (34-36)</label>
                                     </div>
                                     <div class="size-option">
-                                        <input type="radio" id="shorts-adult-l" name="shortsSize" value="Adult L">
-                                        <label for="shorts-adult-l">L</label>
+                                        <input type="radio" id="shorts-adult-l" name="shortsSize" value="L (38-40)">
+                                        <label for="shorts-adult-l">L (38-40)</label>
                                     </div>
                                     <div class="size-option">
-                                        <input type="radio" id="shorts-adult-xl" name="shortsSize" value="Adult XL">
-                                        <label for="shorts-adult-xl">XL</label>
+                                        <input type="radio" id="shorts-adult-xl" name="shortsSize" value="XL (42-44)">
+                                        <label for="shorts-adult-xl">XL (42-44)</label>
                                     </div>
                                     <div class="size-option">
-                                        <input type="radio" id="shorts-adult-xxl" name="shortsSize" value="Adult XXL">
-                                        <label for="shorts-adult-xxl">XXL</label>
+                                        <input type="radio" id="shorts-adult-xxl" name="shortsSize" value="XXL (46-48)">
+                                        <label for="shorts-adult-xxl">XXL (46-48)</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Status -->
+                    <!-- Player Type/Fees -->
                     <div class="form-group">
-                        <label>Status <span class="required">*</span></label>
-                        <div class="status-options">
-                            <div class="status-option">
-                                <input type="radio" id="new-player" name="status" value="New Player ($135)">
-                                <label for="new-player">New Player ($135)</label>
+                        <label><strong>PLAYER TYPE/FEES</strong> <span class="required">*</span></label>
+                        <div class="player-type-options">
+                            <div class="player-type-option">
+                                <input type="radio" id="new-player" name="status" value="NEW PLAYER: $135">
+                                <label for="new-player"><strong>NEW PLAYER: $135</strong></label>
                             </div>
-                            <div class="status-option">
-                                <input type="radio" id="returning-with-uniform" name="status" value="Returning Player w/ Uniform ($85)">
-                                <label for="returning-with-uniform">Returning Player w/ Uniform ($85)</label>
+                            <div class="player-type-option">
+                                <input type="radio" id="returning-without-uniform" name="status" value="RETURNING PLAYER W/O UNIFORM: $135">
+                                <label for="returning-without-uniform"><strong>RETURNING PLAYER W/O UNIFORM: $135</strong></label>
                             </div>
-                            <div class="status-option">
-                                <input type="radio" id="returning-without-uniform" name="status" value="Returning Player w/o Uniform ($135)">
-                                <label for="returning-without-uniform">Returning Player w/o Uniform ($135)</label>
+                            <div class="player-type-option">
+                                <input type="radio" id="returning-with-uniform" name="status" value="RETURNING PLAYER W/UNIFORM: $105">
+                                <label for="returning-with-uniform"><strong>RETURNING PLAYER W/UNIFORM: $105</strong></label>
                             </div>
                         </div>
                     </div>
 
                     <!-- Conditional Fields for Returning Players with Uniform -->
                     <div id="returningUniformFields" class="conditional-fields" style="display: none;">
-                        <h4>Uniform Details (for returning players)</h4>
-                        <div class="form-row three-column">
-                            <div class="form-group">
-                                <label for="jerseyColor">Jersey Color</label>
-                                <input type="text" id="jerseyColor" name="jerseyColor" placeholder="e.g., Blue">
-                            </div>
-                            <div class="form-group">
-                                <label for="jerseyNumber">Number</label>
-                                <input type="text" id="jerseyNumber" name="jerseyNumber" placeholder="e.g., 24">
-                            </div>
-                            <div class="form-group">
-                                <label for="team">Team</label>
-                                <input type="text" id="team" name="team" placeholder="e.g., Hawks">
+                        <div class="returning-player-details">
+                            <strong>RETURNING PLAYER W/UNIFORM: JERSEY COLOR: ______ NUMBER: ______ TEAM: ______</strong>
+                            <div class="form-row three-column">
+                                <div class="form-group">
+                                    <label for="jerseyColor">Jersey Color</label>
+                                    <input type="text" id="jerseyColor" name="jerseyColor" placeholder="e.g., Blue">
+                                </div>
+                                <div class="form-group">
+                                    <label for="jerseyNumber">Number</label>
+                                    <input type="text" id="jerseyNumber" name="jerseyNumber" placeholder="e.g., 24">
+                                </div>
+                                <div class="form-group">
+                                    <label for="team">Team</label>
+                                    <input type="text" id="team" name="team" placeholder="e.g., Hawks">
+                                </div>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Refund Policy -->
+                    <div class="refund-policy">
+                        <p><strong><em>NO REFUNDS WILL BE GIVEN ONCE THE FIRST GAME HAS BEEN PLAYED IN THE PLAYER'S DIVISION.</em></strong></p>
                     </div>
                 </div>
             </div>
@@ -921,7 +962,7 @@
             const statusRadios = document.querySelectorAll('input[name="status"]');
             statusRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
-                    if (this.value === 'Returning Player w/ Uniform ($85)') {
+                    if (this.value === 'RETURNING PLAYER W/UNIFORM: $105') {
                         returningUniformFields.style.display = 'block';
                     } else {
                         returningUniformFields.style.display = 'none';
@@ -1017,7 +1058,7 @@ Gender: ${document.querySelector('input[name="gender"]:checked')?.value || ''}
 Jersey Size: ${data.jerseySize || ''}
 Shorts Size: ${data.shortsSize || ''}
 Status: ${data.status || ''}
-${data.status === 'Returning Player w/ Uniform ($85)' ? `Jersey Color: ${data.jerseyColor || ''}
+${data.status === 'RETURNING PLAYER W/UNIFORM: $105' ? `Jersey Color: ${data.jerseyColor || ''}
 Number: ${data.jerseyNumber || ''}
 Team: ${data.team || ''}` : ''}
 
@@ -1059,7 +1100,7 @@ Consent: ${data.consent ? '☑' : '☐'}
 
 REFUND POLICY
 ------------------------------------------
-No refunds will be given once the first games have been played in the player's division.
+NO REFUNDS WILL BE GIVEN ONCE THE FIRST GAME HAS BEEN PLAYED IN THE PLAYER'S DIVISION.
 
 ---
 Submitted on: ${new Date().toLocaleDateString('en-US', { 
