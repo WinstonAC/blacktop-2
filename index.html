@@ -72,8 +72,34 @@
         }
 
         .radio-item input[type="radio"] {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
+            appearance: none;
+            border: 2px solid #28a745;
+            border-radius: 2px;
+            background: white;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .radio-item input[type="radio"]:checked {
+            background: #28a745;
+        }
+
+        .radio-item input[type="radio"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .radio-item input[type="radio"]:focus {
+            outline: 2px solid #007bff;
+            outline-offset: 2px;
         }
 
         .radio-item label {
@@ -321,6 +347,29 @@
             line-height: 1.5;
         }
 
+        /* Electronic Signature Notice */
+        .electronic-signature-notice {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .electronic-signature-notice h4 {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        .electronic-signature-notice p {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #333;
+            margin-bottom: 0;
+        }
+
         /* Submit Button */
         .submit-section {
             text-align: center;
@@ -512,19 +561,18 @@
 
         <!-- Division Section -->
         <div class="division-section">
-            <h2>Division</h2>
             <div class="radio-group">
                 <div class="radio-item">
-                    <input type="radio" id="biddy" name="division" value="Biddy">
-                    <label for="biddy">Biddy</label>
+                    <input type="radio" id="biddy" name="division" value="Biddy (4-7)">
+                    <label for="biddy">Biddy (4–7)</label>
                 </div>
                 <div class="radio-item">
-                    <input type="radio" id="junior" name="division" value="Junior">
-                    <label for="junior">Junior</label>
+                    <input type="radio" id="junior" name="division" value="Jr (8-11)">
+                    <label for="junior">Jr (8–11)</label>
                 </div>
                 <div class="radio-item">
-                    <input type="radio" id="older" name="division" value="Older">
-                    <label for="older">Older</label>
+                    <input type="radio" id="older" name="division" value="Older (12-14)">
+                    <label for="older">Older (12–14)</label>
                 </div>
             </div>
         </div>
@@ -808,30 +856,15 @@
             <div class="form-section">
                 <h2 class="section-header">Waivers & Permissions</h2>
                 <div class="waiver-section">
-                    <h4>Please read the following statements carefully:</h4>
+                    <h4>WAIVER/LIABILITY FOR THE BLACKTOP MINISTRY BASKETBALL PROGRAM OF THE POTTER'S HOUSE INTERNATIONAL MINISTRIES CHURCH</h4>
                     <p>
-                        I understand and agree that participation in basketball activities involves inherent risks of injury. 
-                        I hereby release, waive, discharge, and covenant not to sue Blacktop Basketball, its officers, 
-                        employees, agents, and volunteers from any and all liability, claims, demands, actions, and causes 
-                        of action whatsoever arising out of or related to any loss, damage, or injury, including death, 
-                        that may be sustained by the participant, whether caused by the negligence of the releasees or otherwise.
+                        I understand that this activity may subject me/my child to rigorous physical exertion and stress, and state that I/my child is in sufficient physical condition to accept this level of activity. I hereby consent to treatment, evacuation, anesthesia and/or operations, which might become necessary in the event of a medical emergency while I/my child is participating in this basketball program. I understand that health/accident insurance coverage is the responsibility of the participant or their parent/guardian. I understand and accept that playing basketball exposes my child to a number of risks. I have and do hereby release and forever discharge The Potter's House International Ministries Church (hereafter, "TPHIM"), the Blacktop Ministry Basketball Program and its agents, employees, directors, coaches and volunteers from any and all liability, actions, causes of action, claims and demands of any and all nature whatsoever which we now have or may ever had as a result of our participation in this program. I agree to indemnify and hold and save TPHIM and Blacktop Ministry Basketball Program harmless from any and all damages, loss or liability occurring by reason of any injury to any person or property caused by an act or omission, neglect or wrongdoing of TPHIM and Blacktop Ministry Basketball Program, myself or my child which may arise out of participation in this program. The TPHIM and Blacktop Ministry Basketball League youth basketball program is not a requirement and I/my child have freely chosen to participate. I hereby assume all risk of injury associated with this program. I give my permission to TPHIM and Blacktop Ministry Basketball Program to use my child's image or voice in basketball or church presentations for publicity. As a condition of participation in the Blacktop Ministry Basketball Program by my child or myself, I agree to 1) adhere to applicable rules, regulations, and policies prescribed by the Basketball Program and Church; and 2) exercise reasonable care and good judgment in such participation.
                     </p>
                     
-                    <h4>Permission to use photograph:</h4>
+                    <h4>Permission to Use Photograph:</h4>
                     <p>
-                        I grant permission for Blacktop Basketball to use photographs, videos, or other media of my child 
-                        for promotional purposes, including but not limited to social media, website, and marketing materials. 
-                        This permission includes the right to edit, modify, and distribute such media in any format.
+                        I give my permission to use my and/or my child's name, photographs, videos, quotations and likeness in any advertisements or promotions performed in connection with The Potter's House International Ministries Church and the Blacktop Ministry Basketball League events or other affiliated events, and agree that neither I nor my child shall be entitled to any compensation for such use. Prior to signing this document, I have had an adequate opportunity to read and understand it, have had an opportunity to ask questions about it, and any questions I had have been answered to my satisfaction. I understand that the Blacktop Basketball Program reserves the right to suspend the participation of any family which does not comply with its guidelines for registration and participate
                     </p>
-                    
-                    <h4>Additional Terms:</h4>
-                    <ul>
-                        <li>All participants must follow the rules and regulations set forth by Blacktop Basketball.</li>
-                        <li>Parents/guardians are responsible for ensuring their child's safety and behavior.</li>
-                        <li>Blacktop Basketball reserves the right to remove any participant for inappropriate behavior.</li>
-                        <li>All equipment must be returned in good condition at the end of the season.</li>
-                        <li>Schedule changes will be communicated via email or phone.</li>
-                    </ul>
                 </div>
             </div>
 
@@ -839,6 +872,11 @@
             <div class="form-section">
                 <h2 class="section-header">Parent/Guardian Signature</h2>
                 <div class="form-grid">
+                    <div class="electronic-signature-notice">
+                        <h4><strong>PLEASE READ THE FOLLOWING STATEMENT BEFORE SIGNING THIS FORM:</strong></h4>
+                        <p><em>By checking the "YES" button, I am signing this document electronically. I agree that my electronic signature is the legal equivalent of my manual/handwritten signature on this document. By checking "YES" using any device, means, or action, I consent to the legally binding terms and conditions of this document. I further agree that my signature on this document is as valid as if I signed the document in writing. If I am signing this document on behalf of a minor, I represent and warrant that I am the minor's parent or legal guardian.</em></p>
+                    </div>
+                    
                     <div class="form-group">
                         <label class="radio-item-inline">
                             <input type="checkbox" id="consent" name="consent" required>
@@ -1006,16 +1044,12 @@ ${data.hearAboutUs || 'Not specified'}
 
 WAIVERS & PERMISSIONS
 ------------------------------------------
-I understand and agree that participation in basketball activities involves inherent risks of injury. I hereby release, waive, discharge, and covenant not to sue Blacktop Basketball, its officers, employees, agents, and volunteers from any and all liability, claims, demands, actions, and causes of action whatsoever arising out of or related to any loss, damage, or injury, including death, that may be sustained by the participant, whether caused by the negligence of the releasees or otherwise.
+WAIVER/LIABILITY FOR THE BLACKTOP MINISTRY BASKETBALL PROGRAM OF THE POTTER'S HOUSE INTERNATIONAL MINISTRIES CHURCH
 
-Permission to use photograph: I grant permission for Blacktop Basketball to use photographs, videos, or other media of my child for promotional purposes, including but not limited to social media, website, and marketing materials.
+I understand that this activity may subject me/my child to rigorous physical exertion and stress, and state that I/my child is in sufficient physical condition to accept this level of activity. I hereby consent to treatment, evacuation, anesthesia and/or operations, which might become necessary in the event of a medical emergency while I/my child is participating in this basketball program. I understand that health/accident insurance coverage is the responsibility of the participant or their parent/guardian. I understand and accept that playing basketball exposes my child to a number of risks. I have and do hereby release and forever discharge The Potter's House International Ministries Church (hereafter, "TPHIM"), the Blacktop Ministry Basketball Program and its agents, employees, directors, coaches and volunteers from any and all liability, actions, causes of action, claims and demands of any and all nature whatsoever which we now have or may ever had as a result of our participation in this program. I agree to indemnify and hold and save TPHIM and Blacktop Ministry Basketball Program harmless from any and all damages, loss or liability occurring by reason of any injury to any person or property caused by an act or omission, neglect or wrongdoing of TPHIM and Blacktop Ministry Basketball Program, myself or my child which may arise out of participation in this program. The TPHIM and Blacktop Ministry Basketball League youth basketball program is not a requirement and I/my child have freely chosen to participate. I hereby assume all risk of injury associated with this program. I give my permission to TPHIM and Blacktop Ministry Basketball Program to use my child's image or voice in basketball or church presentations for publicity. As a condition of participation in the Blacktop Ministry Basketball Program by my child or myself, I agree to 1) adhere to applicable rules, regulations, and policies prescribed by the Basketball Program and Church; and 2) exercise reasonable care and good judgment in such participation.
 
-Additional Terms:
-- All participants must follow the rules and regulations set forth by Blacktop Basketball.
-- Parents/guardians are responsible for ensuring their child's safety and behavior.
-- Blacktop Basketball reserves the right to remove any participant for inappropriate behavior.
-- All equipment must be returned in good condition at the end of the season.
-- Schedule changes will be communicated via email or phone.
+Permission to Use Photograph:
+I give my permission to use my and/or my child's name, photographs, videos, quotations and likeness in any advertisements or promotions performed in connection with The Potter's House International Ministries Church and the Blacktop Ministry Basketball League events or other affiliated events, and agree that neither I nor my child shall be entitled to any compensation for such use. Prior to signing this document, I have had an adequate opportunity to read and understand it, have had an opportunity to ask questions about it, and any questions I had have been answered to my satisfaction. I understand that the Blacktop Basketball Program reserves the right to suspend the participation of any family which does not comply with its guidelines for registration and participate
 
 PARENT/GUARDIAN SIGNATURE
 ------------------------------------------
