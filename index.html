@@ -652,7 +652,7 @@
                     
                     <div id="medicalDescription" class="form-group" style="display: none;">
                         <label for="medicalDetails">If applicable, please describe any medical, learning, or emotional problem which might affect participation.</label>
-                        <textarea id="medicalDetails" name="medicalDetails" rows="4" placeholder="Please describe any medical conditions, learning disabilities, or emotional problems that might affect participation."></textarea>
+                        <input type="text" id="medicalDetails" name="medicalDetails" placeholder="Please describe any medical conditions, learning disabilities, or emotional problems that might affect participation.">
                     </div>
                 </div>
             </div>
@@ -680,13 +680,13 @@
                     <div class="electronic-signature-notice">
                         <h4><strong>PLEASE READ THE FOLLOWING STATEMENT BEFORE SIGNING THIS FORM:</strong></h4>
                         <p><em>By checking the "YES" button, I am signing this document electronically. I agree that my electronic signature is the legal equivalent of my manual/handwritten signature on this document. By checking "YES" using any device, means, or action, I consent to the legally binding terms and conditions of this document. I further agree that my signature on this document is as valid as if I signed the document in writing. If I am signing this document on behalf of a minor, I represent and warrant that I am the minor's parent or legal guardian.</em></p>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="radio-item">
-                            <input type="checkbox" id="consent" name="consent" required>
-                            <span>I agree and consent to the above terms and conditions <span class="required">*</span></span>
-                        </label>
+                        
+                        <div class="form-group" style="margin-top: 15px;">
+                            <label class="radio-item">
+                                <input type="checkbox" id="consent" name="consent" required>
+                                <span>I agree and consent to the above terms and conditions <span class="required">*</span></span>
+                            </label>
+                        </div>
                     </div>
                     
                     <div class="form-row two-column">
