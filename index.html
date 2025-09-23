@@ -389,10 +389,15 @@
                 padding: 20px;
             }
             
-            .form-group input,
-            .form-group select,
-            .form-group textarea {
-                margin: 0 5px;
+            /* Fix section title alignment - align with input fields */
+            .section-header {
+                margin-left: 0;
+                padding-left: 0;
+            }
+            
+            /* Fix date input right edge - add right margin only */
+            input[type="date"] {
+                margin-right: 15px;
             }
         }
 
