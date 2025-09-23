@@ -689,6 +689,42 @@
                 </div>
             </div>
 
+            <!-- Payment Method Section -->
+            <div class="form-section">
+                <h2 class="section-header">Payment Method</h2>
+                <div class="form-grid">
+                    <div class="form-row two-column">
+                        <div class="form-group">
+                            <label>Cash Paid onsite: <span class="required">*</span></label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="cash-yes" name="cashPaid" value="Yes" required>
+                                    <label for="cash-yes">Yes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="cash-no" name="cashPaid" value="No" required>
+                                    <label for="cash-no">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>CashApp: <span class="required">*</span></label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="cashapp-yes" name="cashApp" value="Yes" required>
+                                    <label for="cashapp-yes">Yes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="cashapp-no" name="cashApp" value="No" required>
+                                    <label for="cashapp-no">No</label>
+                                </div>
+                            </div>
+                            <p style="margin-top: 10px; font-size: 13px; color: #666;">Reminder: Pay using CashApp account: <strong>$BTLBB</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Medical Information -->
             <div class="form-section">
                 <h2 class="section-header">Medical Information</h2>
@@ -900,6 +936,11 @@ Player Type: ${data.playerType || ''}
 ${data.playerType === 'Returning Player (with uniform) — $105' ? `Jersey Color: ${data.jerseyColor || ''}
 Jersey Number: ${data.jerseyNumber || ''}
 Team: ${data.team || ''}` : ''}
+
+PAYMENT METHOD
+------------------------------------------
+Cash Paid onsite: ${data.cashPaid || ''}
+CashApp: ${data.cashApp || ''}
 
 MEDICAL INFORMATION
 ------------------------------------------
