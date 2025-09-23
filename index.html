@@ -391,13 +391,19 @@
             
             /* Fix section title alignment - align with input fields */
             .section-header {
-                margin-left: 0;
-                padding-left: 0;
+                margin-left: 0 !important;
+                padding-left: 0 !important;
             }
             
             /* Fix date input right edge - add right margin only */
             input[type="date"] {
-                margin-right: 15px;
+                margin-right: 20px !important;
+                margin-left: 0 !important;
+            }
+            
+            /* Force container padding for mobile */
+            .container {
+                padding: 0 15px !important;
             }
         }
 
