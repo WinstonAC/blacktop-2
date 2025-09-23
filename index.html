@@ -111,8 +111,21 @@
             border-color: #007bff;
         }
 
-        .form-group input:invalid {
+        .form-group input:invalid:not(:placeholder-shown) {
             border-color: #dc3545;
+        }
+
+        /* Date input specific styling */
+        input[type="date"] {
+            color-scheme: light;
+        }
+
+        input[type="date"]:invalid {
+            border-color: #ddd;
+        }
+
+        input[type="date"]:focus:invalid {
+            border-color: #007bff;
         }
 
         /* Radio Button Styles */
@@ -495,7 +508,7 @@
                     <div class="form-row two-column">
                         <div class="form-group">
                             <label for="dateOfBirth">Date of Birth <span class="required">*</span></label>
-                            <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+                            <input type="date" id="dateOfBirth" name="dateOfBirth" required style="color-scheme: light;">
                         </div>
                         <div class="form-group">
                             <label for="age">Age <span class="required">*</span></label>
