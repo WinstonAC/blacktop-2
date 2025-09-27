@@ -753,13 +753,9 @@
                 </div>
 
                 <!-- Jersey & Shorts Sizing -->
-                <div class="jersey-shorts-row" style="margin-top: 20px;">
+                <div id="uniformSizingFields" class="jersey-shorts-row" style="margin-top: 20px;">
                     <div class="form-group">
-                        <label for="jerseySize">JERSEY (CIRCLE) <span class="required">*</span></label>
-                        <div style="font-size: 13px; margin-bottom: 10px; color: #666;">
-                            <div><strong>YTH:</strong> S (4-6) M (8-10) L (12-14)</div>
-                            <div><strong>ADLT:</strong> S (30-32) M (34-36) L (38-40) XL (42-44) XXL (46-48)</div>
-                        </div>
+                        <label for="jerseySize">JERSEY <span class="required">*</span></label>
                         <select id="jerseySize" name="jerseySize" required>
                             <option value="">Select Jersey Size</option>
                             <optgroup label="Youth">
@@ -777,11 +773,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="shortsSize">SHORTS (CIRCLE) <span class="required">*</span></label>
-                        <div style="font-size: 13px; margin-bottom: 10px; color: #666;">
-                            <div><strong>YTH:</strong> S (4-6) M (8-10) L (12-14)</div>
-                            <div><strong>ADLT:</strong> S (30-32) M (34-36) L (38-40) XL (42-44) XXL (46-48)</div>
-                        </div>
+                        <label for="shortsSize">SHORTS <span class="required">*</span></label>
                         <select id="shortsSize" name="shortsSize" required>
                             <option value="">Select Shorts Size</option>
                             <optgroup label="Youth">
@@ -932,12 +924,28 @@
             
             // Show/hide conditional fields for returning players with uniform
             const playerTypeRadios = document.querySelectorAll('input[name="playerType"]');
+            const uniformSizingFields = document.getElementById('uniformSizingFields');
+            const jerseySizeSelect = document.getElementById('jerseySize');
+            const shortsSizeSelect = document.getElementById('shortsSize');
+            
             playerTypeRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
                     if (this.value === 'Returning Player (with uniform) — $105') {
                         returningUniformFields.style.display = 'block';
+                        // Hide uniform sizing for returning players with uniform
+                        uniformSizingFields.style.display = 'none';
+                        // Remove required attribute and clear values
+                        jerseySizeSelect.removeAttribute('required');
+                        shortsSizeSelect.removeAttribute('required');
+                        jerseySizeSelect.value = '';
+                        shortsSizeSelect.value = '';
                     } else {
                         returningUniformFields.style.display = 'none';
+                        // Show uniform sizing for new players and returning without uniform
+                        uniformSizingFields.style.display = 'block';
+                        // Add required attribute back
+                        jerseySizeSelect.setAttribute('required', 'required');
+                        shortsSizeSelect.setAttribute('required', 'required');
                     }
                 });
             });
