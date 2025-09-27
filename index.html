@@ -433,8 +433,8 @@
             body {
                 background: white;
                 padding: 0;
-                font-size: 12px;
-                line-height: 1.4;
+                font-size: 10px;
+                line-height: 1.2;
             }
             
             .container {
@@ -446,13 +446,14 @@
             
             .header {
                 background: white !important;
-                border-bottom: 2px solid black;
-                padding: 20px;
+                border-bottom: 1px solid black;
+                padding: 10px;
+                margin-bottom: 5px;
             }
             
             .header h1 {
-                font-size: 18px;
-                margin-bottom: 10px;
+                font-size: 14px;
+                margin-bottom: 5px;
             }
             
             .submit-section {
@@ -461,15 +462,20 @@
             
             .form-section {
                 border: 1px solid black;
-                margin-bottom: 15px;
+                margin-bottom: 8px;
                 page-break-inside: avoid;
-                padding: 15px;
+                padding: 8px;
             }
             
             .section-header {
-                font-size: 14px;
+                font-size: 11px;
                 border-bottom: 1px solid black;
-                margin-bottom: 10px;
+                margin-bottom: 5px;
+                padding-bottom: 2px;
+            }
+            
+            .form-group {
+                margin-bottom: 8px;
             }
             
             .form-group input,
@@ -477,8 +483,14 @@
             .form-group textarea {
                 border: 1px solid black;
                 background: white;
-                padding: 5px;
-                font-size: 11px;
+                padding: 3px;
+                font-size: 9px;
+                margin-bottom: 3px;
+            }
+            
+            .form-group label {
+                font-size: 9px;
+                margin-bottom: 2px;
             }
             
             .radio-group {
@@ -486,24 +498,99 @@
             }
             
             .radio-item {
-                margin-bottom: 5px;
+                margin-bottom: 3px;
+                font-size: 9px;
+            }
+            
+            .player-type-options {
+                margin-bottom: 8px;
+            }
+            
+            .player-type-option {
+                padding: 4px;
+                margin-bottom: 3px;
+                font-size: 9px;
+            }
+            
+            .jersey-shorts-row {
+                margin-bottom: 8px;
             }
             
             .waiver-section {
                 background: white;
                 border: 1px solid black;
+                padding: 8px;
             }
             
-            .waiver-section p,
-            .waiver-section li {
-                font-size: 11px;
+            .waiver-section h4 {
+                font-size: 9px;
+                margin-bottom: 5px;
+            }
+            
+            .waiver-section p {
+                font-size: 8px;
+                margin-bottom: 5px;
+                line-height: 1.1;
+            }
+            
+            .electronic-signature-notice {
+                padding: 8px;
                 margin-bottom: 8px;
+            }
+            
+            .electronic-signature-notice h4 {
+                font-size: 9px;
+                margin-bottom: 3px;
+            }
+            
+            .electronic-signature-notice p {
+                font-size: 8px;
+                margin-bottom: 5px;
+                line-height: 1.1;
+            }
+            
+            .checkbox-item {
+                font-size: 9px;
             }
             
             .footer {
                 background: white;
                 border-top: 1px solid black;
-                font-size: 10px;
+                font-size: 8px;
+                padding: 5px;
+            }
+            
+            .refund-policy {
+                margin-top: 5px;
+                padding: 5px;
+            }
+            
+            .refund-policy p {
+                font-size: 8px;
+                margin: 0;
+            }
+            
+            .conditional-fields {
+                padding: 5px;
+                margin-top: 5px;
+            }
+            
+            .conditional-fields h4 {
+                font-size: 9px;
+                margin-bottom: 3px;
+            }
+            
+            .inline-fields {
+                gap: 8px;
+            }
+            
+            .address-row {
+                gap: 8px;
+            }
+            
+            .two-column {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
             }
         }
     </style>
@@ -573,11 +660,11 @@
                     <div class="form-row two-column">
                         <div class="form-group">
                             <label for="phone">Phone Number <span class="required">*</span></label>
-                            <input type="tel" id="phone" name="phone" required>
+                            <input type="tel" id="phone" name="phone" required placeholder="(555) 123-4567">
                         </div>
                         <div class="form-group">
                             <label for="altPhone">Alternative Phone Number</label>
-                            <input type="tel" id="altPhone" name="altPhone">
+                            <input type="tel" id="altPhone" name="altPhone" placeholder="(555) 123-4567">
                         </div>
                     </div>
                 </div>
@@ -605,12 +692,57 @@
                 </div>
             </div>
 
-            <!-- Jersey & Shorts -->
+            <!-- Player Type, Fees, Uniform & Payment Section -->
             <div class="form-section">
-                <h2 class="section-header">Jersey & Shorts</h2>
-                <div class="jersey-shorts-row">
+                <h2 class="section-header">Player Type, Fees, Uniform & Payment</h2>
+                
+                <!-- Player Type & Fees -->
+                <div class="form-group">
+                    <label>Select Player Type <span class="required">*</span></label>
+                    <div class="player-type-options">
+                        <div class="player-type-option">
+                            <input type="radio" id="new-player" name="playerType" value="New Player — $135">
+                            <label for="new-player">NEW PLAYER: $135</label>
+                        </div>
+                        <div class="player-type-option">
+                            <input type="radio" id="returning-without-uniform" name="playerType" value="Returning Player (without uniform) — $135">
+                            <label for="returning-without-uniform">RETURNING PLAYER W/O UNIFORM: $135</label>
+                        </div>
+                        <div class="player-type-option">
+                            <input type="radio" id="returning-with-uniform" name="playerType" value="Returning Player (with uniform) — $105">
+                            <label for="returning-with-uniform">RETURNING PLAYER WITH UNIFORM: $105</label>
+                        </div>
+                    </div>
+                    <p style="margin-top: 10px; font-size: 13px; color: #666; font-style: italic;">(Player has uniform that fits and can be worn during games)</p>
+                </div>
+
+                <!-- Conditional Fields for Returning Players with Uniform -->
+                <div id="returningUniformFields" class="conditional-fields" style="display: none;">
+                    <h4>RETURNING PLAYER W/UNIFORM:</h4>
+                    <div class="inline-fields">
+                        <div class="form-group">
+                            <label for="jerseyColor">JERSEY COLOR:</label>
+                            <input type="text" id="jerseyColor" name="jerseyColor" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="jerseyNumber">NUMBER:</label>
+                            <input type="text" id="jerseyNumber" name="jerseyNumber" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label for="team">TEAM:</label>
+                            <input type="text" id="team" name="team" placeholder="">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Jersey & Shorts Sizing -->
+                <div class="jersey-shorts-row" style="margin-top: 20px;">
                     <div class="form-group">
-                        <label for="jerseySize">Jersey Size <span class="required">*</span></label>
+                        <label for="jerseySize">JERSEY (CIRCLE) <span class="required">*</span></label>
+                        <div style="font-size: 13px; margin-bottom: 10px; color: #666;">
+                            <div><strong>YTH:</strong> S (4-6) M (8-10) L (12-14)</div>
+                            <div><strong>ADLT:</strong> S (30-32) M (34-36) L (38-40) XL (42-44) XXL (46-48)</div>
+                        </div>
                         <select id="jerseySize" name="jerseySize" required>
                             <option value="">Select Jersey Size</option>
                             <optgroup label="Youth">
@@ -628,7 +760,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="shortsSize">Shorts Size <span class="required">*</span></label>
+                        <label for="shortsSize">SHORTS (CIRCLE) <span class="required">*</span></label>
+                        <div style="font-size: 13px; margin-bottom: 10px; color: #666;">
+                            <div><strong>YTH:</strong> S (4-6) M (8-10) L (12-14)</div>
+                            <div><strong>ADLT:</strong> S (30-32) M (34-36) L (38-40) XL (42-44) XXL (46-48)</div>
+                        </div>
                         <select id="shortsSize" name="shortsSize" required>
                             <option value="">Select Shorts Size</option>
                             <optgroup label="Youth">
@@ -646,56 +782,12 @@
                         </select>
                     </div>
                 </div>
-            </div>
 
-            <!-- Player Type & Fees -->
-            <div class="form-section">
-                <h2 class="section-header">Player Type & Fees</h2>
-                <div class="form-group">
-                    <label>Select Player Type <span class="required">*</span></label>
-                    <div class="player-type-options">
-                        <div class="player-type-option">
-                            <input type="radio" id="new-player" name="playerType" value="New Player — $135">
-                            <label for="new-player">New Player — $135</label>
-                        </div>
-                        <div class="player-type-option">
-                            <input type="radio" id="returning-without-uniform" name="playerType" value="Returning Player (without uniform) — $135">
-                            <label for="returning-without-uniform">Returning Player (without uniform) — $135</label>
-                        </div>
-                        <div class="player-type-option">
-                            <input type="radio" id="returning-with-uniform" name="playerType" value="Returning Player (with uniform) — $105">
-                            <label for="returning-with-uniform">Returning Player (with uniform) — $105</label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Conditional Fields for Returning Players with Uniform -->
-                <div id="returningUniformFields" class="conditional-fields" style="display: none;">
-                    <h4>Uniform Details (for returning players with uniform)</h4>
-                    <div class="inline-fields">
-                        <div class="form-group">
-                            <label for="jerseyColor">Jersey Color</label>
-                            <input type="text" id="jerseyColor" name="jerseyColor" placeholder="e.g., Blue">
-                        </div>
-                        <div class="form-group">
-                            <label for="jerseyNumber">Number</label>
-                            <input type="text" id="jerseyNumber" name="jerseyNumber" placeholder="e.g., 24">
-                        </div>
-                        <div class="form-group">
-                            <label for="team">Team</label>
-                            <input type="text" id="team" name="team" placeholder="e.g., Hawks">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Payment Method Section -->
-            <div class="form-section">
-                <h2 class="section-header">Payment Method</h2>
-                <div class="form-grid">
+                <!-- Payment Method -->
+                <div style="margin-top: 20px;">
                     <div class="form-row two-column">
                         <div class="form-group">
-                            <label>Cash Paid onsite: <span class="required">*</span></label>
+                            <label>PAYS AT TABLE ONSITE: <span class="required">*</span></label>
                             <div class="radio-group">
                                 <div class="radio-item">
                                     <input type="radio" id="cash-yes" name="cashPaid" value="Yes" required>
@@ -708,7 +800,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>CashApp: <span class="required">*</span></label>
+                            <label>PAYS W/CASH APP: <span class="required">*</span></label>
                             <div class="radio-group">
                                 <div class="radio-item">
                                     <input type="radio" id="cashapp-yes" name="cashApp" value="Yes" required>
@@ -719,7 +811,7 @@
                                     <label for="cashapp-no">No</label>
                                 </div>
                             </div>
-                            <p style="margin-top: 10px; font-size: 13px; color: #666;">Reminder: Pay using CashApp account: <strong>$BTLBB</strong></p>
+                            <p style="margin-top: 10px; font-size: 13px; color: #666;">CashApp: <strong>$BTLBB</strong></p>
                         </div>
                     </div>
                 </div>
@@ -862,6 +954,32 @@
                     
                     ageInput.value = age;
                 }
+            });
+            
+            // Auto-format phone numbers
+            const phoneInput = document.getElementById('phone');
+            const altPhoneInput = document.getElementById('altPhone');
+            
+            function formatPhoneNumber(input) {
+                let value = input.value.replace(/\D/g, ''); // Remove all non-digits
+                
+                if (value.length >= 6) {
+                    value = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6, 10)}`;
+                } else if (value.length >= 3) {
+                    value = `(${value.slice(0, 3)}) ${value.slice(3)}`;
+                } else if (value.length > 0) {
+                    value = `(${value}`;
+                }
+                
+                input.value = value;
+            }
+            
+            phoneInput.addEventListener('input', function() {
+                formatPhoneNumber(this);
+            });
+            
+            altPhoneInput.addEventListener('input', function() {
+                formatPhoneNumber(this);
             });
             
             // Form submission
