@@ -1,3 +1,5 @@
+// COMMENTED OUT: Google Sheets logic moved to index.html to avoid duplicate event listeners
+/*
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById('regForm');
   if (!form) {
@@ -31,3 +33,4 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+*/
