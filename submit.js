@@ -1,26 +1,31 @@
 (function () {
   const form = document.getElementById('regForm');
-  if (!form) return;
+  if (!form) {
+    console.error("Form with id='regForm' not found.");
+    return;
+  }
 
   const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbw8IVW6sZCpjbuLZ7sc6Qkiy3TXsJfSdEK0qasZgdvGSElIMXWDmpGrDa7zIQ6gD-n47g/exec';
 
-  form.addEventListener('submit', function () {
+  form.addEventListener('submit', async function () {
+    const fd = new FormData(form);
+    const params = new URLSearchParams();
+    for (const [key, value] of fd.entries()) {
+      params.append(key, value);
+    }
+
     try {
-      const fd = new FormData(form);
-      const data = Object.fromEntries(fd.entries());
-
-      // fire-and-forget send to Google Sheets
-      fetch(SHEET_ENDPOINT, {
+      const res = await fetch(SHEET_ENDPOINT, {
         method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      }).catch(err => console.error("Sheets error:", err));
-
-      // DO NOT preventDefault, let the form continue its original email submission
-      console.log("Submitted to Sheets + email endpoint");
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params
+      });
+      const text = await res.text();
+      alert("Sheets response: " + text);
+      console.log("Sheets response:", text);
     } catch (err) {
-      console.error("Submit.js error:", err);
+      alert("Error sending to Sheets: " + err);
+      console.error("Sheets fetch error:", err);
     }
   });
 })();
