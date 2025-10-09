@@ -1,4 +1,4 @@
-(function () {
+document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById('regForm');
   if (!form) {
     alert("Debug: regForm not found.");
@@ -30,4 +30,4 @@
       console.error("Debug: Sheets fetch error:", err);
     }
   });
-})();
+});
