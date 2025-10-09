@@ -1,13 +1,15 @@
 (function () {
   const form = document.getElementById('regForm');
   if (!form) {
-    console.error("Form with id='regForm' not found.");
+    alert("Debug: regForm not found.");
+    console.error("Debug: regForm not found.");
     return;
   }
 
   const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbw8IVW6sZCpjbuLZ7sc6Qkiy3TXsJfSdEK0qasZgdvGSElIMXWDmpGrDa7zIQ6gD-n47g/exec';
 
   form.addEventListener('submit', async function () {
+    alert("Debug: submit.js triggered.");
     const fd = new FormData(form);
     const params = new URLSearchParams();
     for (const [key, value] of fd.entries()) {
@@ -21,11 +23,11 @@
         body: params
       });
       const text = await res.text();
-      alert("Sheets response: " + text);
-      console.log("Sheets response:", text);
+      alert("Debug: Sheets response: " + text);
+      console.log("Debug: Sheets response:", text);
     } catch (err) {
-      alert("Error sending to Sheets: " + err);
-      console.error("Sheets fetch error:", err);
+      alert("Debug: Error sending to Sheets: " + err);
+      console.error("Debug: Sheets fetch error:", err);
     }
   });
 })();
