@@ -1238,15 +1238,11 @@ Submitted on: ${new Date().toLocaleDateString('en-US', {
                 
                 // Send data to Google Sheets (fire-and-forget)
                 const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzk20KTG4xf9Whu2ivEtGX1al5zyVJEjQIZxPzjau1LYIw0NUVUwv62CCYzPZPdIkm3ag/exec';
-                const params = new URLSearchParams();
-                for (const [key, value] of formData.entries()) {
-                    params.append(key, value);
-                }
                 
                 fetch(SHEET_ENDPOINT, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: params
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
                 }).then(response => response.text())
                 .then(text => {
                     console.log('Google Sheets response:', text);
