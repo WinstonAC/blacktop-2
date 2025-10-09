@@ -4,35 +4,23 @@
 
   const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbw8IVW6sZCpjbuLZ7sc6Qkiy3TXsJfSdEK0qasZgdvGSElIMXWDmpGrDa7zIQ6gD-n47g/exec';
 
-  form.addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const fd = new FormData(form);
-    const data = Object.fromEntries(fd.entries());
-
-    // (1) Keep sending the form to the existing email endpoint
-    const emailPromise = fetch(form.action, {
-      method: form.method || 'POST',
-      body: fd,
-      headers: { 'Accept': 'application/json' }
-    });
-
-    // (2) Also send the data to Google Sheets
-    const sheetPromise = fetch(SHEET_ENDPOINT, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-
+  form.addEventListener('submit', function () {
     try {
-      await emailPromise; // email must succeed
-      await Promise.race([sheetPromise, new Promise(r => setTimeout(r, 400))]);
-      alert("Thanks! You're registered.");
-      form.reset();
+      const fd = new FormData(form);
+      const data = Object.fromEntries(fd.entries());
+
+      // fire-and-forget send to Google Sheets
+      fetch(SHEET_ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).catch(err => console.error("Sheets error:", err));
+
+      // DO NOT preventDefault, let the form continue its original email submission
+      console.log("Submitted to Sheets + email endpoint");
     } catch (err) {
-      console.error(err);
-      alert("Submission error — please try again.");
+      console.error("Submit.js error:", err);
     }
   });
 })();
