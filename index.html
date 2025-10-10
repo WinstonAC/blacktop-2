@@ -1349,10 +1349,10 @@ Submitted on: ${new Date().toLocaleDateString('en-US', {
                 
                 // Convert to URL-encoded format for Google Sheets
                 // Use FormData instead of URLSearchParams for better compatibility
-                const formData = new FormData();
+                const sheetFormData = new FormData();
                 Object.keys(data).forEach(key => {
                     if (data[key] !== null && data[key] !== undefined) {
-                        formData.append(key, data[key]);
+                        sheetFormData.append(key, data[key]);
                     }
                 });
                 
@@ -1388,7 +1388,7 @@ Submitted on: ${new Date().toLocaleDateString('en-US', {
                     fetch(SHEET_ENDPOINT, {
                         method: 'POST',
                         mode: 'no-cors',
-                        body: formData
+                        body: sheetFormData
                     }).then(() => {
                         console.log('Google Sheets POST request sent');
                         alert('Registration submitted successfully! Check your email for confirmation. Data sent to Google Sheets.');
