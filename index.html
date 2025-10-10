@@ -1345,6 +1345,7 @@ Submitted on: ${new Date().toLocaleDateString('en-US', {
                 
                 // Debug: Log the data being sent
                 console.log('Data being sent to Google Sheets:', data);
+                console.log('Payment amounts - Cash:', data.cashAmount, 'CashApp:', data.cashAppAmount);
                 alert('Debug: Data being sent to Google Sheets. Check console for details.');
                 
                 // Convert to URL-encoded format for Google Sheets
