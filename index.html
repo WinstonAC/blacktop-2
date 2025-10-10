@@ -1256,7 +1256,8 @@ Submitted on: ${new Date().toLocaleDateString('en-US', {
                 });
                 
                 // Send data to Google Sheets with proper error handling
-                const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbw8IVW6sZCpjbuLZ7sc6Qkiy3TXsJfSdEK0qasZgdvGSElIMXWDmpGrDa7zIQ6gD-n47g/exec';
+                // Try the original endpoint first
+                const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzk20KTG4xf9Whu2ivEtGX1al5zyVJEjQIZxPzjau1LYIw0NUVUwv62CCYzPZPdIkm3ag/exec';
                 
                 // Add division to data
                 data.division = division;
@@ -1288,36 +1289,33 @@ Submitted on: ${new Date().toLocaleDateString('en-US', {
                 // Test the endpoint first
                 console.log('Testing Google Sheets endpoint...');
                 
-                // Send to Google Sheets with FormData (better compatibility)
-                fetch(SHEET_ENDPOINT, {
-                    method: 'POST',
-                    mode: 'no-cors', // Use no-cors for Google Apps Script
-                    body: formData
+                // Try GET method first (most reliable for Google Apps Script)
+                const getUrl = `${SHEET_ENDPOINT}?${params.toString()}`;
+                console.log('Sending GET request to:', getUrl);
+                
+                fetch(getUrl, {
+                    method: 'GET',
+                    mode: 'no-cors'
                 }).then(() => {
-                    console.log('Google Sheets request sent with FormData');
+                    console.log('Google Sheets GET request sent');
                     alert('Registration submitted successfully! Check your email for confirmation. Data sent to Google Sheets.');
                 }).catch(err => {
-                    console.error('Google Sheets error:', err);
-                    alert('Registration form data saved, but there was an issue with the tracking system. Please check your email for confirmation.');
-                });
-                
-                // Backup method: Try with URLSearchParams
-                setTimeout(() => {
-                    console.log('Trying backup method with URLSearchParams...');
+                    console.error('Google Sheets GET error:', err);
                     
-                    // Try with GET method as backup
-                    const getUrl = `${SHEET_ENDPOINT}?${params.toString()}`;
-                    console.log('Backup GET URL:', getUrl);
-                    
-                    fetch(getUrl, {
-                        method: 'GET',
-                        mode: 'no-cors'
+                    // Fallback: Try POST with FormData
+                    console.log('Trying POST with FormData as fallback...');
+                    fetch(SHEET_ENDPOINT, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: formData
                     }).then(() => {
-                        console.log('Backup method sent');
-                    }).catch(err => {
-                        console.error('Backup method failed:', err);
+                        console.log('Google Sheets POST request sent');
+                        alert('Registration submitted successfully! Check your email for confirmation. Data sent to Google Sheets.');
+                    }).catch(err2 => {
+                        console.error('Google Sheets POST error:', err2);
+                        alert('Registration form data saved, but there was an issue with the tracking system. Please check your email for confirmation.');
                     });
-                }, 1000);
+                });
                 
                 return false; // Prevent form submission
             });
