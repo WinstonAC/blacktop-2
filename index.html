@@ -1368,6 +1368,12 @@ Submitted on: ${new Date().toLocaleDateString('en-US', {
                 console.log('URL parameters:', params.toString());
                 console.log('Google Sheets endpoint:', SHEET_ENDPOINT);
                 
+                // Debug: Show all form fields being sent
+                console.log('All form fields being sent to Google Sheets:');
+                Object.keys(data).forEach(key => {
+                    console.log(`  ${key}: ${data[key]}`);
+                });
+                
                 // Test the endpoint first
                 console.log('Testing Google Sheets endpoint...');
                 
