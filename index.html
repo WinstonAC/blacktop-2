@@ -960,53 +960,6 @@
     </div>
 
     <script>
-        // Email fallback function
-        function showEmailFallback(subject, emailBody) {
-            const modal = document.createElement('div');
-            modal.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.8);
-                z-index: 10000;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 20px;
-                box-sizing: border-box;
-            `;
-            
-            const content = document.createElement('div');
-            content.style.cssText = `
-                background: white;
-                padding: 30px;
-                border-radius: 8px;
-                max-width: 600px;
-                max-height: 80vh;
-                overflow-y: auto;
-                position: relative;
-            `;
-            
-            content.innerHTML = `
-                <h3 style="margin-top: 0; color: #007bff;">📧 Email Instructions</h3>
-                <p><strong>Your registration data has been copied to your clipboard!</strong></p>
-                <p>Please send an email to:</p>
-                <p style="background: #e3f2fd; padding: 10px; border-radius: 4px; font-family: monospace; font-weight: bold; color: #1976d2;">robertjanice@bellsouth.net</p>
-                <p><strong>Subject:</strong> ${subject}</p>
-                <p><strong>Body:</strong> Paste the registration data from your clipboard</p>
-                <div style="background: #f8f9fa; padding: 15px; border-radius: 4px; margin: 15px 0; max-height: 200px; overflow-y: auto; white-space: pre-wrap; font-family: monospace; font-size: 11px; border: 1px solid #ddd;">${emailBody.substring(0, 500)}...</div>
-                <div style="text-align: center; margin-top: 20px;">
-                    <button onclick="navigator.clipboard.writeText('${emailBody.replace(/'/g, "\\'")}').then(() => alert('✅ Registration data copied to clipboard!')).catch(() => alert('❌ Could not copy to clipboard'));" style="background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; margin-right: 10px; font-weight: bold;">📋 Copy Registration Data</button>
-                    <button onclick="this.closest('.modal').remove();" style="background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-weight: bold;">Close</button>
-                </div>
-            `;
-            
-            modal.className = 'modal';
-            modal.appendChild(content);
-            document.body.appendChild(modal);
-        }
 
         // Form functionality
         document.addEventListener('DOMContentLoaded', function() {
@@ -1286,50 +1239,8 @@ Submitted on: ${new Date().toLocaleDateString('en-US', {
                 const subject = `Blacktop Basketball Registration - ${data.firstName} ${data.lastName}`;
                 const mailtoLink = `mailto:robertjanice@bellsouth.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
                 
-                // Try to open email client - simplified approach
-                try {
-                    // Create a visible link that user can click
-                    const emailLink = document.createElement('a');
-                    emailLink.href = mailtoLink;
-                    emailLink.target = '_blank';
-                    emailLink.style.cssText = `
-                        position: fixed;
-                        top: 20px;
-                        right: 20px;
-                        background: #007bff;
-                        color: white;
-                        padding: 15px 25px;
-                        border-radius: 5px;
-                        text-decoration: none;
-                        font-weight: bold;
-                        z-index: 10000;
-                        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-                    `;
-                    emailLink.textContent = '📧 Click to Open Email';
-                    document.body.appendChild(emailLink);
-                    
-                    // Auto-click after a short delay
-                    setTimeout(() => {
-                        emailLink.click();
-                    }, 500);
-                    
-                    // Remove the link after 10 seconds
-                    setTimeout(() => {
-                        if (emailLink.parentNode) {
-                            emailLink.parentNode.removeChild(emailLink);
-                        }
-                    }, 10000);
-                    
-                    // Show fallback modal after 3 seconds
-                    setTimeout(() => {
-                        showEmailFallback(subject, emailBody);
-                    }, 3000);
-                    
-                } catch (error) {
-                    console.error('Error creating email link:', error);
-                    // Show fallback modal immediately
-                    showEmailFallback(subject, emailBody);
-                }
+                // Open email client - simple approach like before
+                window.location.href = mailtoLink;
                 
                 // Always copy to clipboard as backup
                 navigator.clipboard.writeText(emailBody).then(() => {
