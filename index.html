@@ -1263,6 +1263,7 @@ Submitted on: ${new Date().toLocaleDateString('en-US', {
                 
                 // Debug: Log the data being sent
                 console.log('Data being sent to Google Sheets:', data);
+                alert('Debug: Data being sent to Google Sheets. Check console for details.');
                 
                 // Convert to URL-encoded format for Google Sheets
                 const params = new URLSearchParams();
@@ -1273,6 +1274,10 @@ Submitted on: ${new Date().toLocaleDateString('en-US', {
                 });
                 
                 console.log('URL parameters:', params.toString());
+                console.log('Google Sheets endpoint:', SHEET_ENDPOINT);
+                
+                // Test the endpoint first
+                console.log('Testing Google Sheets endpoint...');
                 
                 // Send to Google Sheets with proper CORS handling
                 fetch(SHEET_ENDPOINT, {
@@ -1284,11 +1289,35 @@ Submitted on: ${new Date().toLocaleDateString('en-US', {
                     body: params
                 }).then(() => {
                     console.log('Google Sheets request sent (no-cors mode)');
-                    alert('Registration submitted successfully! Check your email for confirmation.');
+                    alert('Registration submitted successfully! Check your email for confirmation. Data sent to Google Sheets.');
                 }).catch(err => {
                     console.error('Google Sheets error:', err);
                     alert('Registration form data saved, but there was an issue with the tracking system. Please check your email for confirmation.');
                 });
+                
+                // Backup method: Try with different approach
+                setTimeout(() => {
+                    console.log('Trying backup method...');
+                    const backupParams = new URLSearchParams();
+                    Object.keys(data).forEach(key => {
+                        if (data[key] !== null && data[key] !== undefined) {
+                            backupParams.append(key, data[key]);
+                        }
+                    });
+                    
+                    // Try with GET method as backup
+                    const getUrl = `${SHEET_ENDPOINT}?${backupParams.toString()}`;
+                    console.log('Backup GET URL:', getUrl);
+                    
+                    fetch(getUrl, {
+                        method: 'GET',
+                        mode: 'no-cors'
+                    }).then(() => {
+                        console.log('Backup method sent');
+                    }).catch(err => {
+                        console.error('Backup method failed:', err);
+                    });
+                }, 1000);
                 
                 return false; // Prevent form submission
             });
