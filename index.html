@@ -1240,7 +1240,13 @@ Submitted on: ${new Date().toLocaleDateString('en-US', {
                 const mailtoLink = `mailto:robertjanice@bellsouth.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
                 
                 // Open email client - simple approach like before
-                window.location.href = mailtoLink;
+                try {
+                    window.location.href = mailtoLink;
+                    alert('Email client should open! Please send the email to complete registration.');
+                } catch (error) {
+                    console.error('Error opening email:', error);
+                    alert('Please copy the registration data from your clipboard and send it to robertjanice@bellsouth.net');
+                }
                 
                 // Always copy to clipboard as backup
                 navigator.clipboard.writeText(emailBody).then(() => {
