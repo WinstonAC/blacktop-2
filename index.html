@@ -1021,25 +1021,50 @@
             const cashAmountInput = document.getElementById('cashAmount');
             const cashAppAmountInput = document.getElementById('cashAppAmount');
             
+            // Debug: Check if elements exist
+            console.log('cashAmountField:', cashAmountField);
+            console.log('cashAppAmountField:', cashAppAmountField);
+            console.log('cashAmountInput:', cashAmountInput);
+            console.log('cashAppAmountInput:', cashAppAmountInput);
+            
             // Cash paid radio buttons
             const cashRadios = document.querySelectorAll('input[name="cashPaid"]');
+            console.log('Found cash radios:', cashRadios.length);
             cashRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
+                    console.log('Cash radio changed:', this.value);
                     if (this.value === 'Yes') {
+                        console.log('Showing cash amount field');
                         // Show cash amount field
-                        cashAmountField.style.display = 'block';
-                        cashAmountInput.setAttribute('required', 'required');
+                        if (cashAmountField) {
+                            cashAmountField.style.display = 'block';
+                        }
+                        if (cashAmountInput) {
+                            cashAmountInput.setAttribute('required', 'required');
+                        }
                         
                         // Set cash app to No and hide its amount field
-                        document.querySelector('input[name="cashApp"][value="No"]').checked = true;
-                        cashAppAmountField.style.display = 'none';
-                        cashAppAmountInput.removeAttribute('required');
-                        cashAppAmountInput.value = '';
+                        const cashAppNo = document.querySelector('input[name="cashApp"][value="No"]');
+                        if (cashAppNo) {
+                            cashAppNo.checked = true;
+                        }
+                        if (cashAppAmountField) {
+                            cashAppAmountField.style.display = 'none';
+                        }
+                        if (cashAppAmountInput) {
+                            cashAppAmountInput.removeAttribute('required');
+                            cashAppAmountInput.value = '';
+                        }
                     } else {
+                        console.log('Hiding cash amount field');
                         // Hide cash amount field
-                        cashAmountField.style.display = 'none';
-                        cashAmountInput.removeAttribute('required');
-                        cashAmountInput.value = '';
+                        if (cashAmountField) {
+                            cashAmountField.style.display = 'none';
+                        }
+                        if (cashAmountInput) {
+                            cashAmountInput.removeAttribute('required');
+                            cashAmountInput.value = '';
+                        }
                     }
                 });
             });
