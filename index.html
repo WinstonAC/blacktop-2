@@ -1266,6 +1266,15 @@ Submitted on: ${new Date().toLocaleDateString('en-US', {
                 alert('Debug: Data being sent to Google Sheets. Check console for details.');
                 
                 // Convert to URL-encoded format for Google Sheets
+                // Use FormData instead of URLSearchParams for better compatibility
+                const formData = new FormData();
+                Object.keys(data).forEach(key => {
+                    if (data[key] !== null && data[key] !== undefined) {
+                        formData.append(key, data[key]);
+                    }
+                });
+                
+                // Also try URLSearchParams as backup
                 const params = new URLSearchParams();
                 Object.keys(data).forEach(key => {
                     if (data[key] !== null && data[key] !== undefined) {
@@ -1279,34 +1288,25 @@ Submitted on: ${new Date().toLocaleDateString('en-US', {
                 // Test the endpoint first
                 console.log('Testing Google Sheets endpoint...');
                 
-                // Send to Google Sheets with proper CORS handling
+                // Send to Google Sheets with FormData (better compatibility)
                 fetch(SHEET_ENDPOINT, {
                     method: 'POST',
                     mode: 'no-cors', // Use no-cors for Google Apps Script
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: params
+                    body: formData
                 }).then(() => {
-                    console.log('Google Sheets request sent (no-cors mode)');
+                    console.log('Google Sheets request sent with FormData');
                     alert('Registration submitted successfully! Check your email for confirmation. Data sent to Google Sheets.');
                 }).catch(err => {
                     console.error('Google Sheets error:', err);
                     alert('Registration form data saved, but there was an issue with the tracking system. Please check your email for confirmation.');
                 });
                 
-                // Backup method: Try with different approach
+                // Backup method: Try with URLSearchParams
                 setTimeout(() => {
-                    console.log('Trying backup method...');
-                    const backupParams = new URLSearchParams();
-                    Object.keys(data).forEach(key => {
-                        if (data[key] !== null && data[key] !== undefined) {
-                            backupParams.append(key, data[key]);
-                        }
-                    });
+                    console.log('Trying backup method with URLSearchParams...');
                     
                     // Try with GET method as backup
-                    const getUrl = `${SHEET_ENDPOINT}?${backupParams.toString()}`;
+                    const getUrl = `${SHEET_ENDPOINT}?${params.toString()}`;
                     console.log('Backup GET URL:', getUrl);
                     
                     fetch(getUrl, {
