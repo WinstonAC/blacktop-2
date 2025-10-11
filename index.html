@@ -1206,6 +1206,10 @@
                 const subject = `Blacktop Basketball Registration - ${data.firstName} ${data.lastName}`;
                 
                 // Create simple text email body like last week
+                console.log('About to create email body...');
+                console.log('data.playerType:', data.playerType);
+                
+                // Test with simple email body first
                 const emailBody = `BLACKTOP BASKETBALL REGISTRATION FORM
 ==========================================
 
@@ -1222,7 +1226,7 @@ UNIFORM:
 Jersey: ${data.jerseySize || ''} | Shorts: ${data.shortsSize || ''}
 
 PLAYER TYPE & FEES:
-${data.playerType || ''}
+${'PLAYER TYPE: ' + (data.playerType || '')}
 ${data.playerType && data.playerType.includes('with uniform') ? 'Uniform: ' + (data.jerseyColor || '') + ' #' + (data.jerseyNumber || '') + ' (' + (data.team || '') + ')' : ''}
 
 PAYMENT:
@@ -1256,6 +1260,10 @@ Submitted: ${new Date().toLocaleDateString('en-US', {
     minute: '2-digit'
 })}
 ==========================================`;
+                
+                console.log('Email body created successfully!');
+                console.log('Email body length:', emailBody.length);
+                console.log('Email body preview:', emailBody.substring(0, 200) + '...');
                 
                 const mailtoLink = `mailto:robertjanice@bellsouth.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
                 
