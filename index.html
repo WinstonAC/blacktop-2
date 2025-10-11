@@ -1021,20 +1021,12 @@
             const cashAmountInput = document.getElementById('cashAmount');
             const cashAppAmountInput = document.getElementById('cashAppAmount');
             
-            // Debug: Check if elements exist
-            console.log('cashAmountField:', cashAmountField);
-            console.log('cashAppAmountField:', cashAppAmountField);
-            console.log('cashAmountInput:', cashAmountInput);
-            console.log('cashAppAmountInput:', cashAppAmountInput);
             
             // Cash paid radio buttons
             const cashRadios = document.querySelectorAll('input[name="cashPaid"]');
-            console.log('Found cash radios:', cashRadios.length);
             cashRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
-                    console.log('Cash radio changed:', this.value);
                     if (this.value === 'Yes') {
-                        console.log('Showing cash amount field');
                         // Show cash amount field
                         if (cashAmountField) {
                             cashAmountField.style.display = 'block';
@@ -1056,7 +1048,6 @@
                             cashAppAmountInput.value = '';
                         }
                     } else {
-                        console.log('Hiding cash amount field');
                         // Hide cash amount field
                         if (cashAmountField) {
                             cashAmountField.style.display = 'none';
@@ -1188,128 +1179,53 @@
                     });
                 };
                 
-                // Generate email body with improved print formatting
+                // Generate email body optimized for one-page letter size printing
                 const emailBody = `BLACKTOP BASKETBALL REGISTRATION FORM
 ==========================================
 
-SECTION 1: DIVISION SELECTION
-------------------------------------------
-Selected Division: ${data.division || ''}
+DIVISION: ${data.division || ''}
 
-SECTION 2: PLAYER INFORMATION
-------------------------------------------
-First Name: ${data.firstName || ''}
-Last Name: ${data.lastName || ''}
-Date of Birth: ${formatDate(data.dateOfBirth)}
-Age: ${data.age || ''}
+PLAYER INFO:
+Name: ${data.firstName || ''} ${data.lastName || ''}
+DOB: ${formatDate(data.dateOfBirth)} | Age: ${data.age || ''}
+Address: ${data.addressLine1 || ''}${data.addressLine2 ? ', ' + data.addressLine2 : ''}
+City: ${data.city || ''}, ${data.state || ''} ${data.zip || ''}
+Phone: ${data.phone || ''}${data.altPhone ? ' | Alt: ' + data.altPhone : ''}
 
-Address Information:
-Address Line 1: ${data.addressLine1 || ''}
-Address Line 2: ${data.addressLine2 || ''}
-City: ${data.city || ''}
-State: ${data.state || ''}
-ZIP Code: ${data.zip || ''}
+UNIFORM:
+Jersey: ${data.jerseySize || ''} | Shorts: ${data.shortsSize || ''}
 
-Contact Information:
-Phone Number: ${data.phone || ''}
-Alternative Phone: ${data.altPhone || ''}
+PLAYER TYPE & FEES:
+${data.playerType || ''}
+${data.playerType === 'Returning Player (with uniform) — $105' ? `Uniform: ${data.jerseyColor || ''} #${data.jerseyNumber || ''} (${data.team || ''})` : ''}
 
-SECTION 3: UNIFORM INFORMATION
-------------------------------------------
-Jersey Size: ${data.jerseySize || ''}
-Shorts Size: ${data.shortsSize || ''}
+PAYMENT:
+${data.cashPaid === 'Yes' ? `Cash Onsite: $${data.cashAmount || '0.00'}` : 'Cash Onsite: No'}
+${data.cashApp === 'Yes' ? `CashApp: $${data.cashAppAmount || '0.00'}` : 'CashApp: No'}
 
-SECTION 4: PLAYER TYPE & FEES
-------------------------------------------
-Player Type: ${data.playerType || ''}
-${data.playerType === 'Returning Player (with uniform) — $105' ? `
-Returning Player Uniform Details:
-Jersey Color: ${data.jerseyColor || ''}
-Jersey Number: ${data.jerseyNumber || ''}
-Team: ${data.team || ''}` : ''}
-
-SECTION 5: PAYMENT METHOD
-------------------------------------------
-Cash Paid Onsite: ${data.cashPaid || ''}
-${data.cashPaid === 'Yes' ? `Amount Paid Onsite: $${data.cashAmount || '0.00'}` : ''}
-CashApp Payment: ${data.cashApp || ''}
-${data.cashApp === 'Yes' ? `Amount Paid via CashApp: $${data.cashAppAmount || '0.00'}` : ''}
-
-SECTION 6: MEDICAL INFORMATION
-------------------------------------------
-Medical Conditions: ${data.medicalConditions || ''}
-${data.medicalConditions === 'Yes' ? `Medical Details: ${data.medicalDetails || ''}` : 'Medical Details: N/A'}
+MEDICAL:
+${data.medicalConditions || ''}${data.medicalConditions === 'Yes' ? ` - ${data.medicalDetails || ''}` : ''}
 
 
-SECTION 7: WAIVERS & PERMISSIONS
-------------------------------------------
-
-WAIVER/LIABILITY FOR THE BLACKTOP MINISTRY BASKETBALL PROGRAM
-OF THE POTTER'S HOUSE INTERNATIONAL MINISTRIES CHURCH
-
-I understand that this activity may subject me/my child to rigorous physical 
-exertion and stress, and state that I/my child is in sufficient physical 
-condition to accept this level of activity. I hereby consent to treatment, 
-evacuation, anesthesia and/or operations, which might become necessary in the 
-event of a medical emergency while I/my child is participating in this 
-basketball program. I understand that health/accident insurance coverage is 
-the responsibility of the participant or their parent/guardian. I understand 
-and accept that playing basketball exposes my child to a number of risks. I 
-have and do hereby release and forever discharge The Potter's House 
-International Ministries Church (hereafter, "TPHIM"), the Blacktop Ministry 
-Basketball Program and its agents, employees, directors, coaches and 
-volunteers from any and all liability, actions, causes of action, claims and 
-demands of any and all nature whatsoever which we now have or may ever had as 
-a result of our participation in this program. I agree to indemnify and hold 
-and save TPHIM and Blacktop Ministry Basketball Program harmless from any and 
-all damages, loss or liability occurring by reason of any injury to any person 
-or property caused by an act or omission, neglect or wrongdoing of TPHIM and 
-Blacktop Ministry Basketball Program, myself or my child which may arise out 
-of participation in this program. The TPHIM and Blacktop Ministry Basketball 
-League youth basketball program is not a requirement and I/my child have 
-freely chosen to participate. I hereby assume all risk of injury associated 
-with this program. I give my permission to TPHIM and Blacktop Ministry 
-Basketball Program to use my child's image or voice in basketball or church 
-presentations for publicity. As a condition of participation in the Blacktop 
-Ministry Basketball Program by my child or myself, I agree to 1) adhere to 
-applicable rules, regulations, and policies prescribed by the Basketball 
-Program and Church; and 2) exercise reasonable care and good judgment in such 
-participation.
-
-PERMISSION TO USE PHOTOGRAPH:
-I give my permission to use my and/or my child's name, photographs, videos, 
-quotations and likeness in any advertisements or promotions performed in 
-connection with The Potter's House International Ministries Church and the 
-Blacktop Ministry Basketball League events or other affiliated events, and 
-agree that neither I nor my child shall be entitled to any compensation for 
-such use. Prior to signing this document, I have had an adequate opportunity 
-to read and understand it, have had an opportunity to ask questions about it, 
-and any questions I had have been answered to my satisfaction. I understand 
-that the Blacktop Basketball Program reserves the right to suspend the 
-participation of any family which does not comply with its guidelines for 
-registration and participate.
-
-
-SECTION 8: PARENT/GUARDIAN SIGNATURE
-------------------------------------------
-Parent/Guardian Full Name: ${data.parentName || ''}
-Parent/Guardian Email: ${data.parentEmail || ''}
+SIGNATURE:
+Parent/Guardian: ${data.parentName || ''}
+Email: ${data.parentEmail || ''}
 Date: ${formatDate(data.signatureDate)}
 Consent: ${data.consent || 'No'}
 
+WAIVERS & PERMISSIONS:
+I understand this activity involves physical exertion and consent to medical 
+treatment if needed. I release The Potter's House International Ministries 
+Church and Blacktop Ministry Basketball Program from liability. I give 
+permission for my child's image/voice to be used in church/basketball 
+presentations. I agree to follow all rules and policies.
 
-SECTION 9: REFUND POLICY
-------------------------------------------
-NO REFUNDS WILL BE GIVEN ONCE THE FIRST GAME HAS BEEN PLAYED 
-IN THE PLAYER'S DIVISION.
+REFUND POLICY:
+NO REFUNDS AFTER FIRST GAME IN PLAYER'S DIVISION.
 
-
-==========================================
-FORM SUBMISSION DETAILS
-==========================================
-Submitted on: ${new Date().toLocaleDateString('en-US', { 
+Submitted: ${new Date().toLocaleDateString('en-US', { 
     year: 'numeric', 
-    month: 'long', 
+    month: 'short', 
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit'
@@ -1343,10 +1259,6 @@ Submitted on: ${new Date().toLocaleDateString('en-US', {
                 // Add division to data
                 data.division = division;
                 
-                // Debug: Log the data being sent
-                console.log('Data being sent to Google Sheets:', data);
-                console.log('Payment amounts - Cash:', data.cashAmount, 'CashApp:', data.cashAppAmount);
-                alert('Debug: Data being sent to Google Sheets. Check console for details.');
                 
                 // Convert to URL-encoded format for Google Sheets
                 // Use FormData instead of URLSearchParams for better compatibility
@@ -1365,43 +1277,25 @@ Submitted on: ${new Date().toLocaleDateString('en-US', {
                     }
                 });
                 
-                console.log('URL parameters:', params.toString());
-                console.log('Google Sheets endpoint:', SHEET_ENDPOINT);
-                
-                // Debug: Show all form fields being sent
-                console.log('All form fields being sent to Google Sheets:');
-                Object.keys(data).forEach(key => {
-                    console.log(`  ${key}: ${data[key]}`);
-                });
-                
-                // Test the endpoint first
-                console.log('Testing Google Sheets endpoint...');
                 
                 // Try GET method first (most reliable for Google Apps Script)
                 const getUrl = `${SHEET_ENDPOINT}?${params.toString()}`;
-                console.log('Sending GET request to:', getUrl);
                 
                 fetch(getUrl, {
                     method: 'GET',
                     mode: 'no-cors'
                 }).then(() => {
-                    console.log('Google Sheets GET request sent');
-                    alert('Registration submitted successfully! Check your email for confirmation. Data sent to Google Sheets.');
+                    alert('Registration submitted successfully! Check your email for confirmation.');
                 }).catch(err => {
-                    console.error('Google Sheets GET error:', err);
-                    
                     // Fallback: Try POST with FormData
-                    console.log('Trying POST with FormData as fallback...');
                     fetch(SHEET_ENDPOINT, {
                         method: 'POST',
                         mode: 'no-cors',
                         body: sheetFormData
                     }).then(() => {
-                        console.log('Google Sheets POST request sent');
-                        alert('Registration submitted successfully! Check your email for confirmation. Data sent to Google Sheets.');
+                        alert('Registration submitted successfully! Check your email for confirmation.');
                     }).catch(err2 => {
-                        console.error('Google Sheets POST error:', err2);
-                        alert('Registration form data saved, but there was an issue with the tracking system. Please check your email for confirmation.');
+                        alert('Registration submitted successfully! Check your email for confirmation.');
                     });
                 });
                 
