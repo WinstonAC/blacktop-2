@@ -1238,13 +1238,68 @@ Submitted: ${new Date().toLocaleDateString('en-US', {
 })}
 ==========================================`;
                 
-                // Create mailto link
+                // Create mailto link with HTML formatting for better line breaks
                 const subject = `Blacktop Basketball Registration - ${data.firstName} ${data.lastName}`;
-                const mailtoLink = `mailto:robertjanice@bellsouth.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+                
+                // Create HTML formatted email body for better line break preservation
+                const htmlEmailBody = `<pre style="font-family: Arial, sans-serif; font-size: 12px; line-height: 1.4;">
+BLACKTOP BASKETBALL REGISTRATION FORM
+==========================================
+
+DIVISION: ${data.division || ''}
+
+PLAYER INFO:
+Name: ${data.firstName || ''} ${data.lastName || ''}
+DOB: ${formatDate(data.dateOfBirth)} | Age: ${data.age || ''}
+Address: ${data.addressLine1 || ''}${data.addressLine2 ? ', ' + data.addressLine2 : ''}
+City: ${data.city || ''}, ${data.state || ''} ${data.zip || ''}
+Phone: ${data.phone || ''}${data.altPhone ? ' | Alt: ' + data.altPhone : ''}
+
+UNIFORM:
+Jersey: ${data.jerseySize || ''} | Shorts: ${data.shortsSize || ''}
+
+PLAYER TYPE & FEES:
+${data.playerType || ''}
+${data.playerType === 'Returning Player (with uniform) — $105' ? `Uniform: ${data.jerseyColor || ''} #${data.jerseyNumber || ''} (${data.team || ''})` : ''}
+
+PAYMENT:
+${data.cashPaid === 'Yes' ? `Cash Onsite: $${data.cashAmount || '0.00'}` : 'Cash Onsite: No'}
+${data.cashApp === 'Yes' ? `CashApp: $${data.cashAppAmount || '0.00'}` : 'CashApp: No'}
+
+MEDICAL:
+${data.medicalConditions || ''}${data.medicalConditions === 'Yes' ? ` - ${data.medicalDetails || ''}` : ''}
+
+SIGNATURE:
+Parent/Guardian: ${data.parentName || ''}
+Email: ${data.parentEmail || ''}
+Date: ${formatDate(data.signatureDate)}
+Consent: ${data.consent || 'No'}
+
+WAIVERS & PERMISSIONS:
+I understand this activity involves physical exertion and consent to medical 
+treatment if needed. I release The Potter's House International Ministries 
+Church and Blacktop Ministry Basketball Program from liability. I give 
+permission for my child's image/voice to be used in church/basketball 
+presentations. I agree to follow all rules and policies.
+
+REFUND POLICY:
+NO REFUNDS AFTER FIRST GAME IN PLAYER'S DIVISION.
+
+Submitted: ${new Date().toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+})}
+==========================================
+</pre>`;
+                
+                const mailtoLink = `mailto:robertjanice@bellsouth.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(htmlEmailBody)}`;
                 
                 // Open email client - simple approach like before
                 try {
-                    window.location.href = mailtoLink;
+                window.location.href = mailtoLink;
                     alert('Email client should open! Please send the email to complete registration.');
                 } catch (error) {
                     console.error('Error opening email:', error);
@@ -1294,11 +1349,11 @@ Submitted: ${new Date().toLocaleDateString('en-US', {
                     alert('Registration submitted successfully! Check your email for confirmation.');
                 }).catch(err => {
                     // Fallback: Try POST with FormData
-                    fetch(SHEET_ENDPOINT, {
-                        method: 'POST',
-                        mode: 'no-cors',
+                fetch(SHEET_ENDPOINT, {
+                    method: 'POST',
+                    mode: 'no-cors',
                         body: sheetFormData
-                    }).then(() => {
+                }).then(() => {
                         alert('Registration submitted successfully! Check your email for confirmation.');
                     }).catch(err2 => {
                         alert('Registration submitted successfully! Check your email for confirmation.');
