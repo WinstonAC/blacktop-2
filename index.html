@@ -989,7 +989,7 @@
             
             playerTypeRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
-                    if (this.value === 'Returning Player (with uniform) — $105') {
+                    if (this.value === 'Returning Player (with uniform) - $105') {
                         returningUniformFields.style.display = 'block';
                         // Hide uniform sizing for returning players with uniform
                         uniformSizingFields.style.display = 'none';
@@ -1226,11 +1226,11 @@ ${data.playerType || ''}
 ${data.playerType && data.playerType.includes('with uniform') ? 'Uniform: ' + (data.jerseyColor || '') + ' #' + (data.jerseyNumber || '') + ' (' + (data.team || '') + ')' : ''}
 
 PAYMENT:
-${data.cashPaid === 'Yes' ? `Cash Onsite: $${data.cashAmount || '0.00'}` : 'Cash Onsite: No'}
-${data.cashApp === 'Yes' ? `CashApp: $${data.cashAppAmount || '0.00'}` : 'CashApp: No'}
+${data.cashPaid === 'Yes' ? 'Cash Onsite: $' + (data.cashAmount || '0.00') : 'Cash Onsite: No'}
+${data.cashApp === 'Yes' ? 'CashApp: $' + (data.cashAppAmount || '0.00') : 'CashApp: No'}
 
 MEDICAL:
-${data.medicalConditions || ''}${data.medicalConditions === 'Yes' ? ` - ${data.medicalDetails || ''}` : ''}
+${data.medicalConditions || ''}${data.medicalConditions === 'Yes' ? ' - ' + (data.medicalDetails || '') : ''}
 
 SIGNATURE:
 Parent/Guardian: ${data.parentName || ''}
