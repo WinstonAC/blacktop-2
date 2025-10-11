@@ -1072,7 +1072,6 @@
                 });
                 
                 if (!isValid) {
-                    alert('Please fill in all required fields.');
                     return;
                 }
                 
@@ -1145,7 +1144,7 @@ CashApp: ${data.cashApp || ''}
 MEDICAL INFORMATION
 ------------------------------------------
 Medical Conditions: ${data.medicalConditions || ''}
-${data.medicalConditions === 'Yes' ? `Medical Details: ${data.medicalDetails || ''}` : 'Medical Details: N/A'}
+${data.medicalConditions === 'Yes' ? 'Medical Details: ' + (data.medicalDetails || '') : 'Medical Details: N/A'}
 
 WAIVERS & PERMISSIONS
 ------------------------------------------
@@ -1163,17 +1162,15 @@ I give my permission to use my and/or my child's name, photographs, videos, quot
                 // Open email client - simple approach like before
                 try {
                     window.location.href = mailtoLink;
-                    alert('Email client should open! Please send the email to complete registration.');
                 } catch (error) {
-                    console.error('Error opening email:', error);
-                    alert('Please copy the registration data from your clipboard and send it to robertjanice@bellsouth.net');
+                    // Email client failed to open
                 }
                 
                 // Always copy to clipboard as backup
                 navigator.clipboard.writeText(emailBody).then(() => {
-                    console.log('Registration form copied to clipboard');
+                    // Registration form copied to clipboard
                 }).catch(err => {
-                    console.log('Could not copy to clipboard:', err);
+                    // Could not copy to clipboard
                 });
                 
                 // Send data to Google Sheets with proper error handling
@@ -1209,7 +1206,6 @@ I give my permission to use my and/or my child's name, photographs, videos, quot
                     method: 'GET',
                     mode: 'no-cors'
                 }).then(() => {
-                    alert('Registration submitted successfully! Check your email for confirmation.');
                 }).catch(err => {
                     // Fallback: Try POST with FormData
                     fetch(SHEET_ENDPOINT, {
@@ -1217,9 +1213,7 @@ I give my permission to use my and/or my child's name, photographs, videos, quot
                         mode: 'no-cors',
                         body: sheetFormData
                     }).then(() => {
-                        alert('Registration submitted successfully! Check your email for confirmation.');
                     }).catch(err2 => {
-                        alert('Registration submitted successfully! Check your email for confirmation.');
                     });
                 });
                 
