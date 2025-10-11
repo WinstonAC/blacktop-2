@@ -762,15 +762,15 @@
                     <label>Select Player Type <span class="required">*</span></label>
                     <div class="player-type-options">
                         <div class="player-type-option">
-                            <input type="radio" id="new-player" name="playerType" value="New Player - $135">
+                            <input type="radio" id="new-player" name="playerType" value="New Player — $135">
                             <label for="new-player">NEW PLAYER: $135</label>
                         </div>
                         <div class="player-type-option">
-                            <input type="radio" id="returning-without-uniform" name="playerType" value="Returning Player (without uniform) - $135">
+                            <input type="radio" id="returning-without-uniform" name="playerType" value="Returning Player (without uniform) — $135">
                             <label for="returning-without-uniform">RETURNING PLAYER W/O UNIFORM: $135</label>
                         </div>
                         <div class="player-type-option">
-                            <input type="radio" id="returning-with-uniform" name="playerType" value="Returning Player (with uniform) - $105">
+                            <input type="radio" id="returning-with-uniform" name="playerType" value="Returning Player (with uniform) — $105">
                             <label for="returning-with-uniform">RETURNING PLAYER WITH UNIFORM: $105</label>
                         </div>
                     </div>
@@ -989,7 +989,7 @@
             
             playerTypeRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
-                    if (this.value === 'Returning Player (with uniform) - $105') {
+                    if (this.value === 'Returning Player (with uniform) — $105') {
                         returningUniformFields.style.display = 'block';
                         // Hide uniform sizing for returning players with uniform
                         uniformSizingFields.style.display = 'none';
@@ -1205,11 +1205,7 @@
                 // Create mailto link
                 const subject = `Blacktop Basketball Registration - ${data.firstName} ${data.lastName}`;
                 
-                // Create simple text email body like last week
-                console.log('About to create email body...');
-                console.log('data.playerType:', data.playerType);
-                
-                // Test with simple email body first
+                // Generate email body optimized for one-page letter size printing
                 const emailBody = `BLACKTOP BASKETBALL REGISTRATION FORM
 ==========================================
 
@@ -1226,15 +1222,16 @@ UNIFORM:
 Jersey: ${data.jerseySize || ''} | Shorts: ${data.shortsSize || ''}
 
 PLAYER TYPE & FEES:
-${'PLAYER TYPE: ' + (data.playerType || '')}
-${data.playerType && data.playerType.includes('with uniform') ? 'Uniform: ' + (data.jerseyColor || '') + ' #' + (data.jerseyNumber || '') + ' (' + (data.team || '') + ')' : ''}
+${data.playerType || ''}
+${data.playerType === 'Returning Player (with uniform) — $105' ? `Uniform: ${data.jerseyColor || ''} #${data.jerseyNumber || ''} (${data.team || ''})` : ''}
 
 PAYMENT:
-${data.cashPaid === 'Yes' ? 'Cash Onsite: $' + (data.cashAmount || '0.00') : 'Cash Onsite: No'}
-${data.cashApp === 'Yes' ? 'CashApp: $' + (data.cashAppAmount || '0.00') : 'CashApp: No'}
+${data.cashPaid === 'Yes' ? `Cash Onsite: $${data.cashAmount || '0.00'}` : 'Cash Onsite: No'}
+${data.cashApp === 'Yes' ? `CashApp: $${data.cashAppAmount || '0.00'}` : 'CashApp: No'}
 
 MEDICAL:
-${data.medicalConditions || ''}${data.medicalConditions === 'Yes' ? ' - ' + (data.medicalDetails || '') : ''}
+${data.medicalConditions || ''}${data.medicalConditions === 'Yes' ? ` - ${data.medicalDetails || ''}` : ''}
+
 
 SIGNATURE:
 Parent/Guardian: ${data.parentName || ''}
@@ -1261,9 +1258,6 @@ Submitted: ${new Date().toLocaleDateString('en-US', {
 })}
 ==========================================`;
                 
-                console.log('Email body created successfully!');
-                console.log('Email body length:', emailBody.length);
-                console.log('Email body preview:', emailBody.substring(0, 200) + '...');
                 
                 const mailtoLink = `mailto:robertjanice@bellsouth.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
                 
