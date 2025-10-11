@@ -1141,12 +1141,13 @@
             
             // Form submission
             form.addEventListener('submit', function(e) {
-                console.log("DEBUG - Submit handler reached");
-                alert("DEBUG - Submit handler reached");
-                e.preventDefault();
-                e.stopPropagation();
-                
-                // Validate required fields
+                try {
+                    console.log("DEBUG - Submit handler reached");
+                    alert("DEBUG - Submit handler reached");
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Validate required fields
                 const requiredFields = form.querySelectorAll('[required]');
                 let isValid = true;
                 
@@ -1327,6 +1328,10 @@ Submitted: ${new Date().toLocaleDateString('en-US', {
                 });
                 
                 return false; // Prevent form submission
+                } catch (error) {
+                    console.error("DEBUG - JavaScript error in submit handler:", error);
+                    alert("DEBUG - JavaScript error: " + error.message);
+                }
             });
         });
     </script>
