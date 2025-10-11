@@ -853,10 +853,7 @@
                             </div>
                             <div id="cashAmountField" class="form-group" style="display: none; margin-top: 10px;">
                                 <label for="cashAmount">Amount Paid Onsite <span class="required">*</span></label>
-                                <div style="display: flex; align-items: center;">
-                                    <span style="margin-right: 5px; font-weight: bold;">$</span>
-                                    <input type="number" id="cashAmount" name="cashAmount" step="0.01" min="0" placeholder="0.00" style="text-align: right; width: 100px;">
-                                </div>
+                                <input type="number" id="cashAmount" name="cashAmount" step="0.01" min="0" placeholder="0.00" style="text-align: right;">
                             </div>
                         </div>
                         <div class="form-group">
@@ -873,10 +870,7 @@
                             </div>
                             <div id="cashAppAmountField" class="form-group" style="display: none; margin-top: 10px;">
                                 <label for="cashAppAmount">Amount Paid via CashApp <span class="required">*</span></label>
-                                <div style="display: flex; align-items: center;">
-                                    <span style="margin-right: 5px; font-weight: bold;">$</span>
-                                    <input type="number" id="cashAppAmount" name="cashAppAmount" step="0.01" min="0" placeholder="0.00" style="text-align: right; width: 100px;">
-                                </div>
+                                <input type="number" id="cashAppAmount" name="cashAppAmount" step="0.01" min="0" placeholder="0.00" style="text-align: right;">
                             </div>
                             <p style="margin-top: 10px; font-size: 13px; color: #666;">CashApp: <strong>$BTLBB</strong></p>
                         </div>
@@ -978,8 +972,6 @@
         // Form functionality
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('regForm');
-            console.log("DEBUG - Form element found:", form);
-            alert("DEBUG - Form element found: " + (form ? "YES" : "NO"));
             const returningUniformFields = document.getElementById('returningUniformFields');
             const medicalDescription = document.getElementById('medicalDescription');
             
@@ -1005,8 +997,8 @@
                         // Show uniform sizing for new players and returning without uniform
                         uniformSizingFields.style.display = 'block';
                         // Add required attribute back
-                        jerseySizeSelect.setAttribute('required', '');
-                        shortsSizeSelect.setAttribute('required', '');
+                        jerseySizeSelect.setAttribute('required', 'required');
+                        shortsSizeSelect.setAttribute('required', 'required');
                     }
                 });
             });
@@ -1034,14 +1026,13 @@
             const cashRadios = document.querySelectorAll('input[name="cashPaid"]');
             cashRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
-                    console.log('Cash paid changed to:', this.value);
                     if (this.value === 'Yes') {
                         // Show cash amount field
                         if (cashAmountField) {
                             cashAmountField.style.display = 'block';
                         }
                         if (cashAmountInput) {
-                            cashAmountInput.setAttribute('required', '');
+                            cashAmountInput.setAttribute('required', 'required');
                         }
                         
                         // Set cash app to No and hide its amount field
@@ -1076,7 +1067,7 @@
                     if (this.value === 'Yes') {
                         // Show cash app amount field
                         cashAppAmountField.style.display = 'block';
-                        cashAppAmountInput.setAttribute('required', '');
+                        cashAppAmountInput.setAttribute('required', 'required');
                         
                         // Set cash paid to No and hide its amount field
                         document.querySelector('input[name="cashPaid"][value="No"]').checked = true;
@@ -1097,7 +1088,6 @@
             const ageInput = document.getElementById('age');
             
             dateOfBirthInput.addEventListener('change', function() {
-                console.log('DOB changed:', this.value);
                 if (this.value) {
                     const today = new Date();
                     const birthDate = new Date(this.value);
@@ -1108,7 +1098,6 @@
                         age--;
                     }
                     
-                    console.log('Calculated age:', age);
                     ageInput.value = age;
                 }
             });
@@ -1141,13 +1130,10 @@
             
             // Form submission
             form.addEventListener('submit', function(e) {
-                try {
-                    console.log("DEBUG - Submit handler reached");
-                    alert("DEBUG - Submit handler reached");
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    // Validate required fields
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Validate required fields
                 const requiredFields = form.querySelectorAll('[required]');
                 let isValid = true;
                 
@@ -1161,15 +1147,8 @@
                 });
                 
                 if (!isValid) {
-                    console.log('Form validation failed - missing required fields');
-                    console.log('Required fields that are empty:');
-                    requiredFields.forEach(field => {
-                        if (!field.value) {
-                            console.log('- Missing:', field.name || field.id, ':', field);
-                        }
-                    });
-                    // Temporarily bypass validation to test email generation
-                    console.log('Bypassing validation for testing...');
+                    alert('Please fill in all required fields.');
+                    return;
                 }
                 
                 // Generate email content
@@ -1189,13 +1168,7 @@
                 data.cashApp = cashApp;
                 data.medicalConditions = medicalConditions;
                 data.consent = consent;
-
-                console.log("DEBUG - Full data object:", JSON.stringify(data, null, 2));
-                console.log('Division:', data.division);
-                console.log('Payment data:', data.cashPaid, data.cashAmount, data.cashApp, data.cashAppAmount);
-                console.log('Parent data:', data.parentName, data.parentEmail);
-                console.log('Uniform data:', data.jerseyColor, data.jerseyNumber, data.team);
-
+                
                 // Format date
                 const formatDate = (dateString) => {
                     if (!dateString) return '';
@@ -1205,9 +1178,6 @@
                         day: '2-digit'
                     });
                 };
-                
-                // Create mailto link
-                const subject = `Blacktop Basketball Registration - ${data.firstName} ${data.lastName}`;
                 
                 // Generate email body optimized for one-page letter size printing
                 const emailBody = `BLACKTOP BASKETBALL REGISTRATION FORM
@@ -1262,15 +1232,17 @@ Submitted: ${new Date().toLocaleDateString('en-US', {
 })}
 ==========================================`;
                 
-                console.log("DEBUG - Full email body:", emailBody);
-                
+                // Create mailto link
+                const subject = `Blacktop Basketball Registration - ${data.firstName} ${data.lastName}`;
                 const mailtoLink = `mailto:robertjanice@bellsouth.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
                 
                 // Open email client - simple approach like before
                 try {
                     window.location.href = mailtoLink;
+                    alert('Email client should open! Please send the email to complete registration.');
                 } catch (error) {
                     console.error('Error opening email:', error);
+                    alert('Please copy the registration data from your clipboard and send it to robertjanice@bellsouth.net');
                 }
                 
                 // Always copy to clipboard as backup
@@ -1281,8 +1253,8 @@ Submitted: ${new Date().toLocaleDateString('en-US', {
                 });
                 
                 // Send data to Google Sheets with proper error handling
-                // Use the new Google Apps Script with payment amount fields
-                const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzJCEqmN_FdI-9IDADD6zMexrwp8xVWAqnhJWRffzxUWrGGOTRQ0LwRYiRjnGrFkYy5Vg/exec';
+                // Try the original endpoint first
+                const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzk20KTG4xf9Whu2ivEtGX1al5zyVJEjQIZxPzjau1LYIw0NUVUwv62CCYzPZPdIkm3ag/exec';
                 
                 // Add division to data
                 data.division = division;
@@ -1313,25 +1285,21 @@ Submitted: ${new Date().toLocaleDateString('en-US', {
                     method: 'GET',
                     mode: 'no-cors'
                 }).then(() => {
-                    console.log('Registration submitted successfully! Check your email for confirmation.');
+                    alert('Registration submitted successfully! Check your email for confirmation.');
                 }).catch(err => {
                     // Fallback: Try POST with FormData
-                fetch(SHEET_ENDPOINT, {
-                    method: 'POST',
-                    mode: 'no-cors',
+                    fetch(SHEET_ENDPOINT, {
+                        method: 'POST',
+                        mode: 'no-cors',
                         body: sheetFormData
-                }).then(() => {
-                        console.log('Registration submitted to Google Sheets successfully!');
+                    }).then(() => {
+                        alert('Registration submitted successfully! Check your email for confirmation.');
                     }).catch(err2 => {
-                        console.log('Google Sheets submission failed, but email was sent');
+                        alert('Registration submitted successfully! Check your email for confirmation.');
                     });
                 });
                 
                 return false; // Prevent form submission
-                } catch (error) {
-                    console.error("DEBUG - JavaScript error in submit handler:", error);
-                    alert("DEBUG - JavaScript error: " + error.message);
-                }
             });
         });
     </script>
