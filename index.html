@@ -1241,6 +1241,12 @@ Submitted: ${new Date().toLocaleDateString('en-US', {
                 // Create mailto link with HTML formatting for better line breaks
                 const subject = `Blacktop Basketball Registration - ${data.firstName} ${data.lastName}`;
                 
+                // Debug: Check if all data is present
+                console.log('Form data for email:', data);
+                console.log('Player type:', data.playerType);
+                console.log('Payment data:', data.cashPaid, data.cashAmount, data.cashApp, data.cashAppAmount);
+                console.log('Parent data:', data.parentName, data.parentEmail, data.consent);
+                
                 // Create HTML formatted email body for better line break preservation
                 const htmlEmailBody = `<pre style="font-family: Arial, sans-serif; font-size: 12px; line-height: 1.4;">
 BLACKTOP BASKETBALL REGISTRATION FORM
@@ -1299,11 +1305,9 @@ Submitted: ${new Date().toLocaleDateString('en-US', {
                 
                 // Open email client - simple approach like before
                 try {
-                window.location.href = mailtoLink;
-                    alert('Email client should open! Please send the email to complete registration.');
+                    window.location.href = mailtoLink;
                 } catch (error) {
                     console.error('Error opening email:', error);
-                    alert('Please copy the registration data from your clipboard and send it to robertjanice@bellsouth.net');
                 }
                 
                 // Always copy to clipboard as backup
