@@ -978,7 +978,6 @@
         // Form functionality
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('regForm');
-            console.log('Form element found:', form);
             const returningUniformFields = document.getElementById('returningUniformFields');
             const medicalDescription = document.getElementById('medicalDescription');
             
@@ -1137,7 +1136,6 @@
             
             // Form submission
             form.addEventListener('submit', function(e) {
-                console.log('Form submission triggered!');
                 e.preventDefault();
                 e.stopPropagation();
                 
@@ -1243,15 +1241,9 @@ Submitted: ${new Date().toLocaleDateString('en-US', {
                 // Create mailto link with HTML formatting for better line breaks
                 const subject = `Blacktop Basketball Registration - ${data.firstName} ${data.lastName}`;
                 
-                // Debug: Check if all data is present
-                console.log('Form data for email:', data);
-                console.log('Player type:', data.playerType);
-                console.log('Payment data:', data.cashPaid, data.cashAmount, data.cashApp, data.cashAppAmount);
-                console.log('Parent data:', data.parentName, data.parentEmail, data.consent);
                 
-                // Create HTML formatted email body for better line break preservation
-                const htmlEmailBody = `<pre style="font-family: Arial, sans-serif; font-size: 12px; line-height: 1.4;">
-BLACKTOP BASKETBALL REGISTRATION FORM
+                // Create simple text email body like last week
+                const emailBody = `BLACKTOP BASKETBALL REGISTRATION FORM
 ==========================================
 
 DIVISION: ${data.division || ''}
@@ -1300,10 +1292,9 @@ Submitted: ${new Date().toLocaleDateString('en-US', {
     hour: '2-digit',
     minute: '2-digit'
 })}
-==========================================
-</pre>`;
+==========================================`;
                 
-                const mailtoLink = `mailto:robertjanice@bellsouth.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(htmlEmailBody)}`;
+                const mailtoLink = `mailto:robertjanice@bellsouth.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
                 
                 // Open email client - simple approach like before
                 try {
