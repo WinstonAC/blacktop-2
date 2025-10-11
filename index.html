@@ -1174,7 +1174,13 @@
                 data.cashApp = cashApp;
                 data.medicalConditions = medicalConditions;
                 data.consent = consent;
-                
+
+                console.log('All form data:', data);
+                console.log('Division:', data.division);
+                console.log('Payment data:', data.cashPaid, data.cashAmount, data.cashApp, data.cashAppAmount);
+                console.log('Parent data:', data.parentName, data.parentEmail);
+                console.log('Uniform data:', data.jerseyColor, data.jerseyNumber, data.team);
+
                 // Format date
                 const formatDate = (dateString) => {
                     if (!dateString) return '';
