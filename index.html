@@ -1203,17 +1203,22 @@ I give my permission to use my and/or my child's name, photographs, videos, quot
                 const getUrl = `${SHEET_ENDPOINT}?${params.toString()}`;
                 
                 fetch(getUrl, {
-                    method: 'GET',
-                    mode: 'no-cors'
-                }).then(() => {
+                    method: 'GET'
+                }).then(response => {
+                    if (response.ok) {
+                        // Success - data sent to Google Sheets
+                    }
                 }).catch(err => {
                     // Fallback: Try POST with FormData
                     fetch(SHEET_ENDPOINT, {
                         method: 'POST',
-                        mode: 'no-cors',
                         body: sheetFormData
-                    }).then(() => {
+                    }).then(response => {
+                        if (response.ok) {
+                            // Success - data sent to Google Sheets
+                        }
                     }).catch(err2 => {
+                        // Both methods failed
                     });
                 });
                 
