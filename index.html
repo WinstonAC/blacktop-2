@@ -851,10 +851,6 @@
                                     <label for="cash-no">No</label>
                                 </div>
                             </div>
-                            <div id="cashAmountField" class="form-group" style="display: none; margin-top: 10px;">
-                                <label for="cashAmount">Amount Paid Onsite <span class="required">*</span></label>
-                                <input type="number" id="cashAmount" name="cashAmount" step="0.01" min="0" placeholder="0.00" style="text-align: right;">
-                            </div>
                         </div>
                         <div class="form-group">
                             <label>PAYS W/CASH APP: <span class="required">*</span></label>
@@ -867,10 +863,6 @@
                                     <input type="radio" id="cashapp-no" name="cashApp" value="No" required>
                                     <label for="cashapp-no">No</label>
                                 </div>
-                            </div>
-                            <div id="cashAppAmountField" class="form-group" style="display: none; margin-top: 10px;">
-                                <label for="cashAppAmount">Amount Paid via CashApp <span class="required">*</span></label>
-                                <input type="number" id="cashAppAmount" name="cashAppAmount" step="0.01" min="0" placeholder="0.00" style="text-align: right;">
                             </div>
                             <p style="margin-top: 10px; font-size: 13px; color: #666;">CashApp: <strong>$BTLBB</strong></p>
                         </div>
@@ -1015,73 +1007,6 @@
                 });
             });
             
-            // Payment method mutual exclusivity and amount fields
-            const cashAmountField = document.getElementById('cashAmountField');
-            const cashAppAmountField = document.getElementById('cashAppAmountField');
-            const cashAmountInput = document.getElementById('cashAmount');
-            const cashAppAmountInput = document.getElementById('cashAppAmount');
-            
-            
-            // Cash paid radio buttons
-            const cashRadios = document.querySelectorAll('input[name="cashPaid"]');
-            cashRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === 'Yes') {
-                        // Show cash amount field
-                        if (cashAmountField) {
-                            cashAmountField.style.display = 'block';
-                        }
-                        if (cashAmountInput) {
-                            cashAmountInput.setAttribute('required', 'required');
-                        }
-                        
-                        // Set cash app to No and hide its amount field
-                        const cashAppNo = document.querySelector('input[name="cashApp"][value="No"]');
-                        if (cashAppNo) {
-                            cashAppNo.checked = true;
-                        }
-                        if (cashAppAmountField) {
-                            cashAppAmountField.style.display = 'none';
-                        }
-                        if (cashAppAmountInput) {
-                            cashAppAmountInput.removeAttribute('required');
-                            cashAppAmountInput.value = '';
-                        }
-                    } else {
-                        // Hide cash amount field
-                        if (cashAmountField) {
-                            cashAmountField.style.display = 'none';
-                        }
-                        if (cashAmountInput) {
-                            cashAmountInput.removeAttribute('required');
-                            cashAmountInput.value = '';
-                        }
-                    }
-                });
-            });
-            
-            // Cash app radio buttons
-            const cashAppRadios = document.querySelectorAll('input[name="cashApp"]');
-            cashAppRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === 'Yes') {
-                        // Show cash app amount field
-                        cashAppAmountField.style.display = 'block';
-                        cashAppAmountInput.setAttribute('required', 'required');
-                        
-                        // Set cash paid to No and hide its amount field
-                        document.querySelector('input[name="cashPaid"][value="No"]').checked = true;
-                        cashAmountField.style.display = 'none';
-                        cashAmountInput.removeAttribute('required');
-                        cashAmountInput.value = '';
-                    } else {
-                        // Hide cash app amount field
-                        cashAppAmountField.style.display = 'none';
-                        cashAppAmountInput.removeAttribute('required');
-                        cashAppAmountInput.value = '';
-                    }
-                });
-            });
             
             // Auto-calculate age from date of birth
             const dateOfBirthInput = document.getElementById('dateOfBirth');
@@ -1200,8 +1125,8 @@ ${data.playerType || ''}
 ${data.playerType === 'Returning Player (with uniform) — $105' ? `Uniform: ${data.jerseyColor || ''} #${data.jerseyNumber || ''} (${data.team || ''})` : ''}
 
 PAYMENT:
-${data.cashPaid === 'Yes' ? `Cash Onsite: $${data.cashAmount || '0.00'}` : 'Cash Onsite: No'}
-${data.cashApp === 'Yes' ? `CashApp: $${data.cashAppAmount || '0.00'}` : 'CashApp: No'}
+${data.cashPaid === 'Yes' ? 'Cash Onsite: Yes' : 'Cash Onsite: No'}
+${data.cashApp === 'Yes' ? 'CashApp: Yes' : 'CashApp: No'}
 
 MEDICAL:
 ${data.medicalConditions || ''}${data.medicalConditions === 'Yes' ? ` - ${data.medicalDetails || ''}` : ''}
