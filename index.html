@@ -1139,6 +1139,11 @@
                 e.preventDefault();
                 e.stopPropagation();
                 
+                // Quick test - just open email with test data
+                const testEmail = `mailto:robertjanice@bellsouth.net?subject=TEST&body=This is a test email to verify the form is working.`;
+                window.location.href = testEmail;
+                return false;
+                
                 // Validate required fields
                 const requiredFields = form.querySelectorAll('[required]');
                 let isValid = true;
