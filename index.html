@@ -1003,8 +1003,8 @@
                         // Show uniform sizing for new players and returning without uniform
                         uniformSizingFields.style.display = 'block';
                         // Add required attribute back
-                        jerseySizeSelect.setAttribute('required', 'required');
-                        shortsSizeSelect.setAttribute('required', 'required');
+                        jerseySizeSelect.setAttribute('required', '');
+                        shortsSizeSelect.setAttribute('required', '');
                     }
                 });
             });
@@ -1039,7 +1039,7 @@
                             cashAmountField.style.display = 'block';
                         }
                         if (cashAmountInput) {
-                            cashAmountInput.setAttribute('required', 'required');
+                            cashAmountInput.setAttribute('required', '');
                         }
                         
                         // Set cash app to No and hide its amount field
@@ -1074,7 +1074,7 @@
                     if (this.value === 'Yes') {
                         // Show cash app amount field
                         cashAppAmountField.style.display = 'block';
-                        cashAppAmountInput.setAttribute('required', 'required');
+                        cashAppAmountInput.setAttribute('required', '');
                         
                         // Set cash paid to No and hide its amount field
                         document.querySelector('input[name="cashPaid"][value="No"]').checked = true;
