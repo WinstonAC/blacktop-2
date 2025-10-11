@@ -1122,14 +1122,14 @@ Jersey: ${data.jerseySize || ''} | Shorts: ${data.shortsSize || ''}
 
 PLAYER TYPE & FEES:
 ${data.playerType || ''}
-${data.playerType === 'Returning Player (with uniform) — $105' ? `Uniform: ${data.jerseyColor || ''} #${data.jerseyNumber || ''} (${data.team || ''})` : ''}
+${data.playerType && data.playerType.includes('with uniform') ? 'Uniform: ' + (data.jerseyColor || '') + ' #' + (data.jerseyNumber || '') + ' (' + (data.team || '') + ')' : ''}
 
 PAYMENT:
 ${data.cashPaid === 'Yes' ? 'Cash Onsite: Yes' : 'Cash Onsite: No'}
 ${data.cashApp === 'Yes' ? 'CashApp: Yes' : 'CashApp: No'}
 
 MEDICAL:
-${data.medicalConditions || ''}${data.medicalConditions === 'Yes' ? ` - ${data.medicalDetails || ''}` : ''}
+${data.medicalConditions || ''}${data.medicalConditions === 'Yes' ? ' - ' + (data.medicalDetails || '') : ''}
 
 
 SIGNATURE:
