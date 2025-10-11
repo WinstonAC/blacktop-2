@@ -978,6 +978,7 @@
         // Form functionality
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('regForm');
+            console.log('Form element found:', form);
             const returningUniformFields = document.getElementById('returningUniformFields');
             const medicalDescription = document.getElementById('medicalDescription');
             
@@ -1136,6 +1137,7 @@
             
             // Form submission
             form.addEventListener('submit', function(e) {
+                console.log('Form submission triggered!');
                 e.preventDefault();
                 e.stopPropagation();
                 
