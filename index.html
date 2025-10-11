@@ -1155,7 +1155,7 @@
                 });
                 
                 if (!isValid) {
-                    alert('Please fill in all required fields.');
+                    console.log('Form validation failed - missing required fields');
                     return;
                 }
                 
@@ -1352,7 +1352,7 @@ Submitted: ${new Date().toLocaleDateString('en-US', {
                     method: 'GET',
                     mode: 'no-cors'
                 }).then(() => {
-                    alert('Registration submitted successfully! Check your email for confirmation.');
+                    console.log('Registration submitted successfully! Check your email for confirmation.');
                 }).catch(err => {
                     // Fallback: Try POST with FormData
                 fetch(SHEET_ENDPOINT, {
@@ -1360,9 +1360,9 @@ Submitted: ${new Date().toLocaleDateString('en-US', {
                     mode: 'no-cors',
                         body: sheetFormData
                 }).then(() => {
-                        alert('Registration submitted successfully! Check your email for confirmation.');
+                        console.log('Registration submitted to Google Sheets successfully!');
                     }).catch(err2 => {
-                        alert('Registration submitted successfully! Check your email for confirmation.');
+                        console.log('Google Sheets submission failed, but email was sent');
                     });
                 });
                 
