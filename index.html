@@ -851,6 +851,10 @@
                                     <label for="cash-no">No</label>
                                 </div>
                             </div>
+                            <div id="cashAmountField" class="form-group" style="display: none; margin-top: 10px;">
+                                <label for="cashAmount">Amount ($):</label>
+                                <input type="number" id="cashAmount" name="cashAmount" step="0.01" min="0" placeholder="0.00" style="max-width: 120px;">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>PAYS W/CASH APP: <span class="required">*</span></label>
@@ -863,6 +867,10 @@
                                     <input type="radio" id="cashapp-no" name="cashApp" value="No" required>
                                     <label for="cashapp-no">No</label>
                                 </div>
+                            </div>
+                            <div id="cashAppAmountField" class="form-group" style="display: none; margin-top: 10px;">
+                                <label for="cashAppAmount">Amount ($):</label>
+                                <input type="number" id="cashAppAmount" name="cashAppAmount" step="0.01" min="0" placeholder="0.00" style="max-width: 120px;">
                             </div>
                             <p style="margin-top: 10px; font-size: 13px; color: #666;">CashApp: <strong>$BTLBB</strong></p>
                         </div>
@@ -1007,6 +1015,34 @@
                 });
             });
             
+            // Show/hide payment amount fields
+            const cashAmountField = document.getElementById('cashAmountField');
+            const cashAppAmountField = document.getElementById('cashAppAmountField');
+            const cashRadios = document.querySelectorAll('input[name="cashPaid"]');
+            const cashAppRadios = document.querySelectorAll('input[name="cashApp"]');
+            
+            cashRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'Yes') {
+                        cashAmountField.style.display = 'block';
+                        cashAppAmountField.style.display = 'none';
+                    } else {
+                        cashAmountField.style.display = 'none';
+                    }
+                });
+            });
+            
+            cashAppRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'Yes') {
+                        cashAppAmountField.style.display = 'block';
+                        cashAmountField.style.display = 'none';
+                    } else {
+                        cashAppAmountField.style.display = 'none';
+                    }
+                });
+            });
+            
             
             // Auto-calculate age from date of birth
             const dateOfBirthInput = document.getElementById('dateOfBirth');
@@ -1055,6 +1091,7 @@
             
             // Form submission
             form.addEventListener('submit', function(e) {
+                console.log("🚨 DEBUG: Submit handler triggered");
                 e.preventDefault();
                 e.stopPropagation();
                 
@@ -1092,6 +1129,7 @@
                 data.cashApp = cashApp;
                 data.medicalConditions = medicalConditions;
                 data.consent = consent;
+                
                 
                 // Format date
                 const formatDate = (dateString) => {
@@ -1138,8 +1176,8 @@ Team: ${data.team || ''}` : ''}
 
 PAYMENT METHOD
 ------------------------------------------
-Cash Paid onsite: ${data.cashPaid || ''}
-CashApp: ${data.cashApp || ''}
+${data.cashPaid === 'Yes' ? `Cash Onsite: $${data.cashAmount || '0.00'}` : 'Cash Onsite: No'}
+${data.cashApp === 'Yes' ? `CashApp: $${data.cashAppAmount || '0.00'}` : 'CashApp: No'}
 
 MEDICAL INFORMATION
 ------------------------------------------
@@ -1153,24 +1191,52 @@ WAIVER/LIABILITY FOR THE BLACKTOP MINISTRY BASKETBALL PROGRAM OF THE POTTER'S HO
 I understand that this activity may subject me/my child to rigorous physical exertion and stress, and state that I/my child is in sufficient physical condition to accept this level of activity. I hereby consent to treatment, evacuation, anesthesia and/or operations, which might become necessary in the event of a medical emergency while I/my child is participating in this basketball program. I understand that health/accident insurance coverage is the responsibility of the participant or their parent/guardian. I understand and accept that playing basketball exposes my child to a number of risks. I have and do hereby release and forever discharge The Potter's House International Ministries Church (hereafter, "TPHIM"), the Blacktop Ministry Basketball Program and its agents, employees, directors, coaches and volunteers from any and all liability, actions, causes of action, claims and demands of any and all nature whatsoever which we now have or may ever had as a result of our participation in this program. I agree to indemnify and hold and save TPHIM and Blacktop Ministry Basketball Program harmless from any and all damages, loss or liability occurring by reason of any injury to any person or property caused by an act or omission, neglect or wrongdoing of TPHIM and Blacktop Ministry Basketball Program, myself or my child which may arise out of participation in this program. The TPHIM and Blacktop Ministry Basketball League youth basketball program is not a requirement and I/my child have freely chosen to participate. I hereby assume all risk of injury associated with this program. I give my permission to TPHIM and Blacktop Ministry Basketball Program to use my child's image or voice in basketball or church presentations for publicity. As a condition of participation in the Blacktop Ministry Basketball Program by my child or myself, I agree to 1) adhere to applicable rules, regulations, and policies prescribed by the Basketball Program and Church; and 2) exercise reasonable care and good judgment in such participation.
 
 Permission to Use Photograph:
-I give my permission to use my and/or my child's name, photographs, videos, quotations and likeness in any advertisements or promotions performed in connection with The Potter's House International Ministries Church and the Blacktop Ministry Basketball League events or other affiliated events, and agree that neither I nor my child shall be entitled to any compensation for such use. Prior to signing this document, I have had an adequate opportunity to read and understand it, have had an opportunity to ask questions about it, and any questions I had have been answered to my satisfaction. I understand that the Blacktop Basketball Program reserves the right to suspend the participation of any family which does not comply with its guidelines for registration and participate`;
+I give my permission to use my and/or my child's name, photographs, videos, quotations and likeness in any advertisements or promotions performed in connection with The Potter's House International Ministries Church and the Blacktop Ministry Basketball League events or other affiliated events, and agree that neither I nor my child shall be entitled to any compensation for such use. Prior to signing this document, I have had an adequate opportunity to read and understand it, have had an opportunity to ask questions about it, and any questions I had have been answered to my satisfaction. I understand that the Blacktop Basketball Program reserves the right to suspend the participation of any family which does not comply with its guidelines for registration and participate.
+
+PARENT/GUARDIAN SIGNATURE
+------------------------------------------
+Electronic Signature Consent: ${data.consent || ''}
+Parent/Guardian Full Name: ${data.parentName || ''}
+Parent/Guardian Email: ${data.parentEmail || ''}
+Signature Date: ${formatDate(data.signatureDate)}
+
+Cheers!
+Contact Numbers:
+🇩🇪 Germany: +49 176 24217059
+🇺🇸 USA: +01 917 97527709
+Website: williamacampbell.com`;
                 
-                // Create mailto link
-                const subject = `Blacktop Basketball Registration - ${data.firstName} ${data.lastName}`;
-                const mailtoLink = `mailto:robertjanice@bellsouth.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
                 
-                // Open email client - simple approach like before
-                try {
-                    window.location.href = mailtoLink;
-                } catch (error) {
-                    // Email client failed to open
+                // Check email body length and trim refund policy if needed
+                let finalEmailBody = emailBody;
+                if (emailBody.length > 4000) {
+                    // Remove refund policy section if email is too long
+                    finalEmailBody = emailBody.replace(/\n\nREFUND POLICY[\s\S]*?NO REFUNDS WILL BE GIVEN ONCE THE FIRST GAME HAS BEEN PLAYED IN THE PLAYER'S DIVISION\.\n\n/, '\n\n');
                 }
+
+                // DEBUG: Log email body lengths and content
+                console.log('DEBUG emailBody length:', emailBody.length);
+                console.log('DEBUG finalEmailBody length:', finalEmailBody.length);
+                console.log('DEBUG refund policy trimming fired:', emailBody.length > 4000);
+                console.log('DEBUG finalEmailBody first 200 chars:', finalEmailBody.substring(0, 200));
+                console.log('DEBUG finalEmailBody last 200 chars:', finalEmailBody.substring(finalEmailBody.length - 200));
+
+                // Create mailto link with full email body
+                const subject = `Blacktop Basketball Registration - ${data.firstName} ${data.lastName}`;
+                const mailtoLink = `mailto:robertjanice@bellsouth.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(finalEmailBody)}`;
                 
-                // Always copy to clipboard as backup
+                // Copy full email to clipboard as backup
                 navigator.clipboard.writeText(emailBody).then(() => {
-                    // Registration form copied to clipboard
+                    // Open email client with full email body
+                    try {
+                        window.location.href = mailtoLink;
+                    } catch (error) {
+                        alert('Please copy the registration data from your clipboard and send it to robertjanice@bellsouth.net');
+                    }
                 }).catch(err => {
-                    // Could not copy to clipboard
+                    // Fallback if clipboard fails
+                    alert('Please copy the registration data manually and send it to robertjanice@bellsouth.net');
+                    console.log('Full email body:', emailBody);
                 });
                 
                 // Send data to Google Sheets with proper error handling
