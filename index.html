@@ -1127,7 +1127,15 @@
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const button = form.querySelector('button[type="submit"]');
-                if (button.disabled || !form.reportValidity()) return;
+                if (!consentBox.checked) {
+                    showConsentToast();
+                    consentBox.focus();
+                    return;
+                }
+                if (button.disabled || !form.reportValidity()) {
+                    if (!consentBox.checked) showConsentToast();
+                    return;
+                }
 
                 // Generate email content
                 const formData = new FormData(form);
@@ -1168,7 +1176,14 @@
                     });
                     if (!response.ok) throw new Error('Registration request failed');
                     const receipt = await response.json();
-                    if (receipt?.success !== true) throw new Error('Missing registration receipt');
+                    if (receipt?.success !== true) {
+                        form.hidden = false;
+                        title.textContent = 'We couldn’t confirm your registration.';
+                        detail.textContent = 'The registration server could not save your form yet. Please try Submit again in a minute. If this keeps happening, contact Coach Mitchell at robertjanice@bellsouth.net.';
+                        button.disabled = false;
+                        button.textContent = 'Submit Registration';
+                        return;
+                    }
                     form.hidden = true;
                     if (receipt.retryEmails === true) {
                         retryEmails.hidden = false;
