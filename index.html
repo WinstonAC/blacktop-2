@@ -307,6 +307,20 @@
         }
 
         /* Submit Button */
+        #consentToast:not(:empty) {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: max-content;
+            max-width: 90vw;
+            padding: 0.75rem 1rem;
+            background: #17202a;
+            color: white;
+            border-radius: 6px;
+            z-index: 10;
+        }
+
         .submit-section {
             text-align: center;
             padding: 30px;
@@ -957,6 +971,7 @@
             <div class="submit-section">
                 <button type="submit" class="submit-btn">Submit Registration</button>
             </div>
+            <div id="consentToast" role="alert"></div>
         </form>
 
         <!-- Footer -->
@@ -1089,29 +1104,21 @@
                 formatPhoneNumber(this);
             });
             
-            // Form submission
+            const consentBox = form.elements.consent;
+            const consentToast = document.getElementById('consentToast');
+            function showConsentToast() {
+                consentToast.textContent = 'Please check the box to agree to the terms before submitting.';
+            }
+
+            consentBox.addEventListener('invalid', showConsentToast);
+            consentBox.addEventListener('change', function() {
+                consentToast.textContent = '';
+            });
+
             form.addEventListener('submit', function(e) {
-                console.log("🚨 DEBUG: Submit handler triggered");
                 e.preventDefault();
-                e.stopPropagation();
-                
-                // Validate required fields
-                const requiredFields = form.querySelectorAll('[required]');
-                let isValid = true;
-                
-                requiredFields.forEach(field => {
-                    if (!field.value) {
-                        isValid = false;
-                        field.classList.add('error');
-                    } else {
-                        field.classList.remove('error');
-                    }
-                });
-                
-                if (!isValid) {
-                    return;
-                }
-                
+                if (!form.reportValidity()) return;
+
                 // Generate email content
                 const formData = new FormData(form);
                 const data = Object.fromEntries(formData.entries());
@@ -1198,13 +1205,7 @@ PARENT/GUARDIAN SIGNATURE
 Electronic Signature Consent: ${data.consent || ''}
 Parent/Guardian Full Name: ${data.parentName || ''}
 Parent/Guardian Email: ${data.parentEmail || ''}
-Signature Date: ${formatDate(data.signatureDate)}
-
-Cheers!
-Contact Numbers:
-🇩🇪 Germany: +49 176 24217059
-🇺🇸 USA: +01 917 97527709
-Website: williamacampbell.com`;
+Signature Date: ${formatDate(data.signatureDate)}`;
                 
                 
                 // Check email body length and trim refund policy if needed
@@ -1213,13 +1214,6 @@ Website: williamacampbell.com`;
                     // Remove refund policy section if email is too long
                     finalEmailBody = emailBody.replace(/\n\nREFUND POLICY[\s\S]*?NO REFUNDS WILL BE GIVEN ONCE THE FIRST GAME HAS BEEN PLAYED IN THE PLAYER'S DIVISION\.\n\n/, '\n\n');
                 }
-
-                // DEBUG: Log email body lengths and content
-                console.log('DEBUG emailBody length:', emailBody.length);
-                console.log('DEBUG finalEmailBody length:', finalEmailBody.length);
-                console.log('DEBUG refund policy trimming fired:', emailBody.length > 4000);
-                console.log('DEBUG finalEmailBody first 200 chars:', finalEmailBody.substring(0, 200));
-                console.log('DEBUG finalEmailBody last 200 chars:', finalEmailBody.substring(finalEmailBody.length - 200));
 
                 // Create mailto link with full email body
                 const subject = `Blacktop Basketball Registration - ${data.firstName} ${data.lastName}`;
@@ -1236,7 +1230,6 @@ Website: williamacampbell.com`;
                 }).catch(err => {
                     // Fallback if clipboard fails
                     alert('Please copy the registration data manually and send it to robertjanice@bellsouth.net');
-                    console.log('Full email body:', emailBody);
                 });
                 
                 // Send data to Google Sheets with proper error handling
