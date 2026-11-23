@@ -1,42 +1,44 @@
-# Fix Blacktop registration submit errors
+# Blacktop registration — get live again (email only)
 
-When parents see **“We couldn’t confirm your registration”**, the public form is working but the **Google Apps Script web app** cannot save rows to the registration spreadsheet. That happens if the script was never configured after the last code update.
+Parents fill out the form → script emails **robertjanice@bellsouth.net** → they see a thank-you on screen. **No Google Sheet required.**
 
-## What you need
+## 1. Update Apps Script code
 
-- The **Google Sheet** that stores registrations (opened from your dad’s Google Drive)
-- **Apps Script** opened from that sheet: **Extensions → Apps Script**
-- The code in this repo: [`apps-script/Confirmation.gs`](apps-script/Confirmation.gs)
+1. Open the **Blacktop** project in [script.google.com](https://script.google.com).
+2. Replace **all** code in `Code.gs` with the contents of [`apps-script/Confirmation.gs`](apps-script/Confirmation.gs) from this repo (email-only version).
+3. **Save**.
 
-## One-time setup (in Apps Script editor)
+## 2. Deploy (Blacktop 2026)
 
-1. Replace the project’s `Code.gs` (or equivalent) with the full contents of `apps-script/Confirmation.gs` from this repo.
-2. **Save** the project.
-3. In the editor, choose **Run** on **`configureRegistrationSheet`** (not the web app). Approve permissions when prompted.
-4. Run **`configureBlacktopSender`** once with your dad’s sending Gmail (the account that owns/deploys the script), for example in the editor console or as a one-off function call:
-   ```javascript
-   configureBlacktopSender('dad-google-account@gmail.com');
-   ```
-   Use the **Google account email** that should send thank-you messages—not a `@bellsouth.net` address unless that inbox is a Google account used to deploy the script.
-5. **Deploy → Manage deployments → Edit** (pencil) on the existing **Web app** deployment, set **Version** to **New version**, **Execute as: Me**, **Who has access: Anyone**, then **Deploy**.
-6. Copy the **Web app URL** (`.../macros/s/.../exec`). If it changed, update `SHEET_ENDPOINT` in `index.html` and push to GitHub so GitHub Pages picks it up.
+1. **Deploy → Manage deployments**
+2. Select **Blacktop 2026** → **Edit** (pencil)
+3. **Version: New version**
+4. **Execute as:** Me  
+5. **Who has access:** Anyone  
+6. **Deploy**
 
-## Verify
+The URL should stay:
 
-In a browser, open the web app URL with no query string. You should see JSON like `{"success":false}` (that is correct for an empty visit).
+`https://script.google.com/macros/s/AKfycbzL_g7_gJ50kngSZ7Xeij5OXjfOQ_kq9JBi1PUqTp8QBeOfRW4dBc7n_2RsrAbNT70sEw/exec`
 
-Submit a test registration on [the live form](https://winstonac.github.io/blacktop-2/). You should see **Thank you for registering!** and a new row in the sheet.
+(If the URL changes, update `SHEET_ENDPOINT` in `index.html` on GitHub.)
 
-## Email behavior
+## 3. Authorize email (first time)
 
-- **Organizer**: Registration details go to `robertjanice@bellsouth.net` (plain body, no personal footer).
-- **Parent thank-you**: Sent from the configured Blacktop Google account when `configureBlacktopSender` matches the deploying user.
-- **“Sent from my iPhone”** / **“Forwarded Message”**: Added by the sender’s mail app, not the form.
+1. In the editor, run `doGet` once (or submit a test registration).
+2. Approve permissions for **sending email**.
+3. Redeploy **new version** if Google asks you to.
 
-## Checkbox reminder (already on the live form)
+## Optional: parent thank-you email
 
-If a parent submits without checking consent, the form blocks submit and shows: *Please check the box to agree to the terms before submitting.*
+Run once in the editor:
 
----
+```javascript
+configureBlacktopSender('wcampbell0880@gmail.com');
+```
 
-**Live form:** https://winstonac.github.io/blacktop-2/
+Use the same Google account that **Execute as: Me** uses. If you skip this, dad still gets every registration; parents just won’t get an auto thank-you.
+
+## Test
+
+Submit on https://winstonac.github.io/blacktop-2/ — you should see **Thank you — your registration was submitted!** and dad should get the email.

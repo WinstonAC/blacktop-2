@@ -1,39 +1,9 @@
-// Run once in the spreadsheet-bound Apps Script editor before deploying the web app.
-function configureRegistrationSheet() {
-  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  if (!spreadsheet) {
-    throw new Error('Open Apps Script from Extensions → Apps Script on the registration spreadsheet.');
-  }
-  PropertiesService.getScriptProperties().setProperty('BLACKTOP_SHEET_ID', spreadsheet.getId());
-}
-
-// Set to the Google account email that deploys this script (e.g. dad's Gmail). Required for guardian thank-you emails.
-function configureBlacktopSender(senderEmail) {
-  const email = String(senderEmail || '').trim();
-  if (!/^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/.test(email)) {
-    throw new Error('Pass a valid sender email, e.g. configureBlacktopSender("robertjanice@bellsouth.net")');
-  }
-  PropertiesService.getScriptProperties().setProperty('BLACKTOP_SENDER_EMAIL', email);
-}
-
-function getRegistrationSheet() {
-  const sheetId = PropertiesService.getScriptProperties().getProperty('BLACKTOP_SHEET_ID');
-  if (!sheetId) {
-    throw new Error('Run configureRegistrationSheet() once in the editor, then redeploy the web app.');
-  }
-  const spreadsheet = SpreadsheetApp.openById(sheetId);
-  let sheet = spreadsheet.getSheets().find(tab => tab.getSheetId() === 0);
-  if (!sheet) {
-    sheet = spreadsheet.getSheetByName('Form Responses 1');
-  }
-  if (!sheet) {
-    throw new Error('Registration tab not found. Use the sheet linked to this script.');
-  }
-  return sheet;
-}
+/**
+ * Blacktop registration — email only (no Google Sheet required).
+ * Parents submit the web form → this script emails robertjanice@bellsouth.net.
+ */
 
 function doGet(e) {
-  // A deployment opened in a browser must never create an empty registration.
   return handleSubmission(e);
 }
 
@@ -41,95 +11,43 @@ function doPost(e) {
   return handleSubmission(e);
 }
 
-function registrationReceipt(success, emailsSent, retryEmails) {
-  return ContentService.createTextOutput(JSON.stringify({ success: success, emailsSent: emailsSent === true, retryEmails: retryEmails === true }))
-    .setMimeType(ContentService.MimeType.JSON);
+function jsonReceipt(success, parentThankYouSent) {
+  return ContentService.createTextOutput(JSON.stringify({
+    success: success === true,
+    emailsSent: parentThankYouSent === true,
+    retryEmails: false
+  })).setMimeType(ContentService.MimeType.JSON);
 }
 
 function handleSubmission(e) {
   const data = (e && e.parameter) || {};
+
   if (data.consent !== 'Yes' || !data.firstName || !data.lastName ||
       !data.parentName || !data.signatureDate ||
       !/^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/.test(data.parentEmail || '')) {
-    return registrationReceipt(false);
+    return jsonReceipt(false);
   }
 
-  const id = data.registrationId || Utilities.getUuid();
-  if (!/^[a-f0-9-]{36}$/i.test(id)) return registrationReceipt(false);
-  const lock = LockService.getScriptLock();
-  let saved = false;
   try {
-    lock.waitLock(10000);
-    const sheet = getRegistrationSheet();
-    const width = Math.max(13, sheet.getLastColumn());
-    const headers = sheet.getRange(1, 1, 1, width).getValues()[0];
-    let idColumn = headers.indexOf('Blacktop registration ID') + 1;
-    if (!idColumn) {
-      idColumn = width + 1;
-      if (idColumn > sheet.getMaxColumns()) sheet.insertColumnAfter(width);
-      sheet.getRange(1, idColumn).setValue('Blacktop registration ID');
-    }
-    // Keep per-recipient status so retries only send outstanding messages.
-    const deliveryColumns = ['Blacktop organizer email', 'Blacktop guardian email'].map(label => {
-      const existing = headers.indexOf(label);
-      if (existing >= 0) return existing + 1;
-      const column = sheet.getLastColumn() + 1;
-      if (column > sheet.getMaxColumns()) sheet.insertColumnAfter(column - 1);
-      sheet.getRange(1, column).setValue(label);
-      return column;
+    MailApp.sendEmail({
+      to: 'robertjanice@bellsouth.net',
+      subject: 'Blacktop Basketball Registration - ' + data.firstName + ' ' + data.lastName,
+      body: registrationEmailBody(data)
     });
-    const count = sheet.getLastRow() - 1;
-    const previous = count > 0 && sheet.getRange(2, idColumn, count, 1)
-      .createTextFinder(id).matchEntireCell(true).findNext();
-    let rowNumber;
-    if (previous) {
-      rowNumber = previous.getRow();
-      const original = sheet.getRange(rowNumber, 2, 1, 3).getDisplayValues()[0];
-      if (original[0] !== data.firstName || original[1] !== data.lastName ||
-          original[2] !== data.parentEmail) return registrationReceipt(false);
-    } else {
-      const medical = [data.medicalConditions, data.medicalDetails].filter(Boolean).join(' - ');
-      const row = [new Date(), data.firstName, data.lastName, data.parentEmail, data.phone,
-        data.division, data.cashPaid, data.cashAmount, data.cashApp, data.cashAppAmount,
-        data.parentName, medical, 'Electronic consent: ' + data.consent];
-      while (row.length < idColumn) row.push('');
-      row[idColumn - 1] = id;
-      sheet.appendRow(row.map(value => typeof value === 'string' && /^[=+@-]/.test(value)
-        ? "'" + value : (value || '')));
-      rowNumber = sheet.getLastRow();
-      for (const column of deliveryColumns) sheet.getRange(rowNumber, column).setValue('pending');
-      SpreadsheetApp.flush();
-    }
-    saved = true;
-    const send = [
-      () => MailApp.sendEmail({
-        to: 'robertjanice@bellsouth.net',
-        subject: 'Blacktop Basketball Registration - ' + data.firstName + ' ' + data.lastName,
-        body: registrationEmailBody(data)
-      }),
-      () => sendBlacktopThankYou(data)
-    ];
-    const statuses = deliveryColumns.map((column, i) => {
-      const cell = sheet.getRange(rowNumber, column);
-      const status = cell.getValue();
-      if (status !== 'pending') return status;
-      try {
-        send[i]();
-      } catch (error) {
-        console.error('Email send failed for registration ' + id + ', recipient type ' + i);
-        return 'pending';
-      }
-      cell.setValue('sent');
-      SpreadsheetApp.flush();
-      return 'sent';
-    });
-    return registrationReceipt(true, statuses.every(status => status === 'sent'), statuses.includes('pending'));
   } catch (error) {
-    console.error('Registration processing failed', error.name);
-    return registrationReceipt(saved);
-  } finally {
-    if (lock.hasLock()) lock.releaseLock();
+    console.error('Organizer email failed', error);
+    return jsonReceipt(false);
   }
+
+  var parentThankYouSent = false;
+  try {
+    sendBlacktopThankYou(data);
+    parentThankYouSent = true;
+  } catch (error) {
+    console.error('Thank-you email skipped', error);
+  }
+
+  return jsonReceipt(true, parentThankYouSent);
 }
 
 function registrationEmailBody(data) {
@@ -195,17 +113,25 @@ Parent/Guardian Email: ${data.parentEmail || ''}
 Signature Date: ${formatDate(data.signatureDate)}`;
 }
 
+/** Optional: set Script property BLACKTOP_SENDER_EMAIL to the deploying Gmail (wcampbell0880@gmail.com). */
+function configureBlacktopSender(senderEmail) {
+  const email = String(senderEmail || Session.getActiveUser().getEmail() || '').trim();
+  if (!/^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/.test(email)) {
+    throw new Error('Pass a valid Gmail address for thank-you emails.');
+  }
+  PropertiesService.getScriptProperties().setProperty('BLACKTOP_SENDER_EMAIL', email);
+}
+
 function sendBlacktopThankYou(registration) {
-  const configuredSender = PropertiesService.getScriptProperties()
-    .getProperty('BLACKTOP_SENDER_EMAIL');
+  const configuredSender = PropertiesService.getScriptProperties().getProperty('BLACKTOP_SENDER_EMAIL');
   const sender = Session.getEffectiveUser().getEmail();
   if (!configuredSender || sender.toLowerCase() !== configuredSender.trim().toLowerCase()) {
-    throw new Error('Configure the Blacktop sending account before enabling confirmations.');
+    throw new Error('Run configureBlacktopSender with the deploying Google account.');
   }
 
   const recipient = String(registration.parentEmail || '').trim();
   if (registration.consent !== 'Yes' || !/^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/.test(recipient)) {
-    throw new Error('A signed registration and one guardian email address are required.');
+    throw new Error('Invalid guardian email.');
   }
 
   MailApp.sendEmail({
