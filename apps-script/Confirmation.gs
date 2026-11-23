@@ -1,6 +1,6 @@
 /**
- * Blacktop registration — email only (no Google Sheet required).
- * Parents submit the web form → this script emails robertjanice@bellsouth.net.
+ * Blacktop registration: email to Coach Mitchell (required for success) +
+ * optional row in the existing sheet (BLACKTOP_SHEET_ID in Script properties).
  */
 
 function doGet(e) {
@@ -39,6 +39,12 @@ function handleSubmission(e) {
     return jsonReceipt(false);
   }
 
+  try {
+    appendToRegistrationSheet(data);
+  } catch (error) {
+    console.error('Sheet backup failed (email already sent)', error);
+  }
+
   var parentThankYouSent = false;
   try {
     sendBlacktopThankYou(data);
@@ -48,6 +54,41 @@ function handleSubmission(e) {
   }
 
   return jsonReceipt(true, parentThankYouSent);
+}
+
+function getRegistrationSheet() {
+  const sheetId = PropertiesService.getScriptProperties().getProperty('BLACKTOP_SHEET_ID');
+  if (!sheetId) return null;
+  const ss = SpreadsheetApp.openById(sheetId);
+  const preferredNames = ['Blacktop League Registration', 'Form Responses 1', 'Sheet1'];
+  for (const name of preferredNames) {
+    const tab = ss.getSheetByName(name);
+    if (tab) return tab;
+  }
+  return ss.getSheets()[0] || null;
+}
+
+function appendToRegistrationSheet(data) {
+  const sheet = getRegistrationSheet();
+  if (!sheet) return;
+  const medical = [data.medicalConditions, data.medicalDetails].filter(Boolean).join(' - ');
+  const row = [
+    new Date(),
+    data.firstName || '',
+    data.lastName || '',
+    data.parentEmail || '',
+    data.phone || '',
+    data.division || '',
+    data.cashPaid || '',
+    data.cashAmount || '',
+    data.cashApp || '',
+    data.cashAppAmount || '',
+    data.parentName || '',
+    medical,
+    'Electronic consent: ' + (data.consent || '')
+  ].map(value => typeof value === 'string' && /^[=+@-]/.test(value) ? "'" + value : (value || ''));
+  sheet.appendRow(row);
+  SpreadsheetApp.flush();
 }
 
 function registrationEmailBody(data) {

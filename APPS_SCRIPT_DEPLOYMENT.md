@@ -1,6 +1,8 @@
 # Blacktop registration — get live again (email only)
 
-Parents fill out the form → script emails **robertjanice@bellsouth.net** → they see a thank-you on screen. **No Google Sheet required.**
+Parents fill out the form → script emails **robertjanice@bellsouth.net** → they see a thank-you on screen.
+
+If **BLACKTOP_SHEET_ID** is already in Script properties (you have this), rows still append to **Blacktop League Registration** when possible. Sheet errors do **not** block submit anymore.
 
 ## 1. Update Apps Script code
 
