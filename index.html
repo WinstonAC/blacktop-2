@@ -1227,6 +1227,8 @@ Signature Date: ${formatDate(data.signatureDate)}`;
                 result.hidden = true;
                 button.disabled = true;
                 button.textContent = 'Submitting…';
+                form.dataset.registrationId ||= crypto.randomUUID();
+                data.registrationId = form.dataset.registrationId;
                 const controller = new AbortController();
                 const timeout = setTimeout(() => controller.abort(), 20000);
                 try {
@@ -1237,7 +1239,7 @@ Signature Date: ${formatDate(data.signatureDate)}`;
                     });
                     if (!response.ok) throw new Error('Registration request failed');
                     const receipt = await response.json();
-                    if (receipt?.ok !== true) throw new Error('Missing registration receipt');
+                    if (receipt?.success !== true) throw new Error('Missing registration receipt');
                     form.hidden = true;
                     title.textContent = 'Thank you for registering!';
                     detail.textContent = 'Blacktop Basketball received your registration. See you on the court!';
