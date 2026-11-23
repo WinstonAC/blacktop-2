@@ -177,11 +177,11 @@ function sendBlacktopThankYou(registration) {
 
   MailApp.sendEmail({
     to: recipient,
-    name: 'Blacktop Basketball',
+    name: 'Coach Mitchell, Blacktop Basketball',
     replyTo: 'robertjanice@bellsouth.net',
     subject: 'Thank you for registering with Blacktop Basketball',
     body: 'Thank you for signing up for Blacktop Basketball! We received your registration. ' +
       'If you have any questions before the season starts, reply to this email.\n\n' +
-      'See you on the court!\nRobert Mitchell\nBlacktop Basketball'
+      'See you on the court!\nCoach Mitchell\nBlacktop Basketball'
   });
 }
