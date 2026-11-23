@@ -1178,21 +1178,20 @@
                     const receipt = await response.json();
                     if (receipt?.success !== true) {
                         form.hidden = false;
-                        title.textContent = 'We couldn’t confirm your registration.';
-                        detail.textContent = 'The registration server could not save your form yet. Please try Submit again in a minute. If this keeps happening, contact Coach Mitchell at robertjanice@bellsouth.net.';
+                        title.textContent = 'We couldn’t send your registration.';
+                        detail.textContent = 'Please try Submit again. If it still fails, contact Coach Mitchell at robertjanice@bellsouth.net.';
                         button.disabled = false;
                         button.textContent = 'Submit Registration';
                         return;
                     }
                     form.hidden = true;
-                    if (receipt.retryEmails === true) {
-                        retryEmails.hidden = false;
-                        button.disabled = false;
-                    }
+                    retryEmails.hidden = true;
                     title.textContent = 'Thank you for registering!';
-                    detail.textContent = receipt.emailsSent === true
-                        ? 'Your registration was emailed to Robert Mitchell. We also sent a thank-you to ' + data.parentEmail + '. See you on the court!'
-                        : 'Your registration is saved. We haven’t confirmed both emails yet. You can close this page.';
+                    detail.textContent = 'Your registration was emailed to Coach Mitchell at robertjanice@bellsouth.net.';
+                    if (receipt.emailsSent === true && data.parentEmail) {
+                        detail.textContent += ' We also sent a thank-you to ' + data.parentEmail + '.';
+                    }
+                    detail.textContent += ' See you on the court!';
                 } catch {
                     form.hidden = false;
                     title.textContent = 'We couldn’t confirm your registration.';
