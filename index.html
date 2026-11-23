@@ -454,8 +454,13 @@
             }
         }
 
-        /* Print Styles */
+        /* Print: 2 pages (duplex) — page 1 registration data, page 2 waivers + signature */
         @media print {
+            @page {
+                size: letter;
+                margin: 0.28in 0.32in;
+            }
+
             * {
                 -webkit-print-color-adjust: exact !important;
                 color-adjust: exact !important;
@@ -465,8 +470,8 @@
                 background: white !important;
                 padding: 0 !important;
                 margin: 0 !important;
-                font-size: 11px !important;
-                line-height: 1.3 !important;
+                font-size: 10px !important;
+                line-height: 1.25 !important;
                 font-family: Arial, sans-serif !important;
             }
             
@@ -481,27 +486,61 @@
             .header {
                 background: white !important;
                 border-bottom: 2px solid black !important;
-                padding: 15px !important;
-                margin-bottom: 10px !important;
+                padding: 8px 6px !important;
+                margin-bottom: 4px !important;
                 text-align: center !important;
             }
             
             .header h1 {
-                font-size: 16px !important;
+                font-size: 13px !important;
                 margin-bottom: 0 !important;
                 font-weight: bold !important;
             }
             
-            .submit-section {
+            .submit-section,
+            #submissionResult,
+            #consentToast,
+            #retryEmails {
                 display: none !important;
             }
             
             .form-section {
                 border: 1px solid black !important;
-                margin-bottom: 10px !important;
-                page-break-inside: avoid !important;
-                padding: 12px !important;
+                margin-bottom: 4px !important;
+                page-break-inside: auto !important;
+                padding: 6px 8px !important;
                 background: white !important;
+            }
+
+            .print-sheet-front .player-type-options {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr 1fr !important;
+                gap: 3px 6px !important;
+            }
+
+            .print-sheet-front .player-type-option {
+                padding: 3px 4px !important;
+                margin-bottom: 0 !important;
+            }
+
+            .print-sheet-front .radio-group {
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
+                gap: 6px 12px !important;
+            }
+
+            .print-sheet-back-start {
+                page-break-before: always !important;
+                margin-top: 0 !important;
+            }
+
+            .print-signature-block {
+                page-break-inside: avoid !important;
+            }
+
+            .print-sheet-front p[style] {
+                margin-top: 4px !important;
+                font-size: 8px !important;
             }
             
             .section-header {
@@ -583,27 +622,28 @@
             }
             
             .waiver-section p {
-                font-size: 9px !important;
-                margin-bottom: 6px !important;
-                line-height: 1.2 !important;
+                font-size: 8.25px !important;
+                margin-bottom: 4px !important;
+                line-height: 1.12 !important;
+                text-align: justify !important;
             }
             
             .electronic-signature-notice {
-                padding: 10px !important;
-                margin-bottom: 10px !important;
+                padding: 6px 8px !important;
+                margin-bottom: 6px !important;
                 border: 1px solid black !important;
             }
             
             .electronic-signature-notice h4 {
-                font-size: 10px !important;
-                margin-bottom: 4px !important;
+                font-size: 9px !important;
+                margin-bottom: 3px !important;
                 font-weight: bold !important;
             }
             
             .electronic-signature-notice p {
-                font-size: 9px !important;
-                margin-bottom: 6px !important;
-                line-height: 1.2 !important;
+                font-size: 8.25px !important;
+                margin-bottom: 4px !important;
+                line-height: 1.12 !important;
             }
             
             .checkbox-item {
@@ -664,8 +704,12 @@
                 gap: 10px !important;
             }
             
-            .form-grid {
+            .print-sheet-front .form-grid {
                 display: block !important;
+            }
+
+            .footer {
+                page-break-inside: avoid !important;
             }
         }
     </style>
@@ -680,7 +724,7 @@
 
         <form id="regForm">
             <!-- Player Information Section -->
-            <div class="form-section">
+            <div class="form-section print-sheet-front">
                 <h2 class="section-header">Player Information</h2>
                 <div class="form-grid">
                     <div class="form-row two-column">
@@ -747,7 +791,7 @@
             </div>
 
             <!-- Division Selection -->
-            <div class="form-section">
+            <div class="form-section print-sheet-front">
                 <h2 class="section-header">Division Selection</h2>
                 <div class="form-group">
                     <label>Select Division <span class="required">*</span></label>
@@ -769,7 +813,7 @@
             </div>
 
             <!-- Player Type, Fees, Uniform & Payment Section -->
-            <div class="form-section">
+            <div class="form-section print-sheet-front">
                 <h2 class="section-header">Player Type, Fees, Uniform & Payment</h2>
                 
                 <!-- Player Type & Fees -->
@@ -894,7 +938,7 @@
             </div>
 
             <!-- Medical Information -->
-            <div class="form-section">
+            <div class="form-section print-sheet-front">
                 <h2 class="section-header">Medical Information</h2>
                 <div class="form-grid">
                     <div class="form-group">
@@ -919,7 +963,7 @@
             </div>
 
             <!-- Waivers & Permissions Section -->
-            <div class="form-section">
+            <div class="form-section print-sheet-back-start">
                 <h2 class="section-header">Waivers & Permissions</h2>
                 <div class="waiver-section">
                     <h4>WAIVER/LIABILITY FOR THE BLACKTOP MINISTRY BASKETBALL PROGRAM OF THE POTTER'S HOUSE INTERNATIONAL MINISTRIES CHURCH</h4>
@@ -935,7 +979,7 @@
             </div>
 
             <!-- Parent/Guardian Signature Section -->
-            <div class="form-section">
+            <div class="form-section print-signature-block">
                 <h2 class="section-header">Parent/Guardian Signature</h2>
                 <div class="form-grid">
                     <div class="electronic-signature-notice">
