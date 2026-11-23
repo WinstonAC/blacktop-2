@@ -1,4 +1,11 @@
-// Replace the existing bound registration script with this file.
+// Run once in the spreadsheet-bound Apps Script editor before deploying.
+function configureRegistrationSheet() {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  if (!spreadsheet || !spreadsheet.getSheetByName('Form Responses 1')) {
+    throw new Error('Open Apps Script from the registration spreadsheet containing Form Responses 1.');
+  }
+  PropertiesService.getScriptProperties().setProperty('BLACKTOP_SHEET_ID', spreadsheet.getId());
+}
 function doGet(e) {
   // A deployment opened in a browser must never create an empty registration.
   return handleSubmission(e);
@@ -27,7 +34,10 @@ function handleSubmission(e) {
   let saved = false;
   try {
     lock.waitLock(10000);
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Form Responses 1');
+    const sheetId = PropertiesService.getScriptProperties().getProperty('BLACKTOP_SHEET_ID');
+    if (!sheetId) throw new Error('Run configureRegistrationSheet in the bound editor first.');
+    const sheet = SpreadsheetApp.openById(sheetId).getSheetByName('Form Responses 1');
+    if (!sheet) throw new Error('Registration sheet tab is missing.');
     const width = Math.max(13, sheet.getLastColumn());
     const headers = sheet.getRange(1, 1, 1, width).getValues()[0];
     let idColumn = headers.indexOf('Blacktop registration ID') + 1;
