@@ -1,4 +1,37 @@
-// Replace the existing bound registration script with this file.
+// Run once in the spreadsheet-bound Apps Script editor before deploying the web app.
+function configureRegistrationSheet() {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  if (!spreadsheet) {
+    throw new Error('Open Apps Script from Extensions → Apps Script on the registration spreadsheet.');
+  }
+  PropertiesService.getScriptProperties().setProperty('BLACKTOP_SHEET_ID', spreadsheet.getId());
+}
+
+// Set to the Google account email that deploys this script (e.g. dad's Gmail). Required for guardian thank-you emails.
+function configureBlacktopSender(senderEmail) {
+  const email = String(senderEmail || '').trim();
+  if (!/^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/.test(email)) {
+    throw new Error('Pass a valid sender email, e.g. configureBlacktopSender("robertjanice@bellsouth.net")');
+  }
+  PropertiesService.getScriptProperties().setProperty('BLACKTOP_SENDER_EMAIL', email);
+}
+
+function getRegistrationSheet() {
+  const sheetId = PropertiesService.getScriptProperties().getProperty('BLACKTOP_SHEET_ID');
+  if (!sheetId) {
+    throw new Error('Run configureRegistrationSheet() once in the editor, then redeploy the web app.');
+  }
+  const spreadsheet = SpreadsheetApp.openById(sheetId);
+  let sheet = spreadsheet.getSheets().find(tab => tab.getSheetId() === 0);
+  if (!sheet) {
+    sheet = spreadsheet.getSheetByName('Form Responses 1');
+  }
+  if (!sheet) {
+    throw new Error('Registration tab not found. Use the sheet linked to this script.');
+  }
+  return sheet;
+}
+
 function doGet(e) {
   // A deployment opened in a browser must never create an empty registration.
   return handleSubmission(e);
@@ -27,7 +60,7 @@ function handleSubmission(e) {
   let saved = false;
   try {
     lock.waitLock(10000);
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Form Responses 1');
+    const sheet = getRegistrationSheet();
     const width = Math.max(13, sheet.getLastColumn());
     const headers = sheet.getRange(1, 1, 1, width).getValues()[0];
     let idColumn = headers.indexOf('Blacktop registration ID') + 1;
