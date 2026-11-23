@@ -307,6 +307,20 @@
         }
 
         /* Submit Button */
+        #consentToast:not(:empty) {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: max-content;
+            max-width: 90vw;
+            padding: 0.75rem 1rem;
+            background: #17202a;
+            color: white;
+            border-radius: 6px;
+            z-index: 10;
+        }
+
         .submit-section {
             text-align: center;
             padding: 30px;
@@ -655,6 +669,7 @@
             }
         }
     </style>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='orange'/%3E%3Cpath d='M1 16h30M16 1v30M5 6q17 10 0 20M27 6q-17 10 0 20' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E">
 </head>
 <body>
     <div class="container">
@@ -957,7 +972,14 @@
             <div class="submit-section">
                 <button type="submit" class="submit-btn">Submit Registration</button>
             </div>
+            <div id="consentToast" role="alert"></div>
         </form>
+
+        <section id="submissionResult" hidden tabindex="-1" class="submit-section" aria-labelledby="resultTitle">
+            <h2 id="resultTitle"></h2>
+            <p id="resultDetail"></p>
+            <a id="registrationEmail">Email registration to Blacktop</a>
+        </section>
 
         <!-- Footer -->
         <div class="footer">
@@ -1089,29 +1111,22 @@
                 formatPhoneNumber(this);
             });
             
-            // Form submission
-            form.addEventListener('submit', function(e) {
-                console.log("🚨 DEBUG: Submit handler triggered");
+            const consentBox = form.elements.consent;
+            const consentToast = document.getElementById('consentToast');
+            function showConsentToast() {
+                consentToast.textContent = 'Please check the box to agree to the terms before submitting.';
+            }
+
+            consentBox.addEventListener('invalid', showConsentToast);
+            consentBox.addEventListener('change', function() {
+                consentToast.textContent = '';
+            });
+
+            form.addEventListener('submit', async function(e) {
                 e.preventDefault();
-                e.stopPropagation();
-                
-                // Validate required fields
-                const requiredFields = form.querySelectorAll('[required]');
-                let isValid = true;
-                
-                requiredFields.forEach(field => {
-                    if (!field.value) {
-                        isValid = false;
-                        field.classList.add('error');
-                    } else {
-                        field.classList.remove('error');
-                    }
-                });
-                
-                if (!isValid) {
-                    return;
-                }
-                
+                const button = form.querySelector('button[type="submit"]');
+                if (button.disabled || !form.reportValidity()) return;
+
                 // Generate email content
                 const formData = new FormData(form);
                 const data = Object.fromEntries(formData.entries());
@@ -1198,91 +1213,48 @@ PARENT/GUARDIAN SIGNATURE
 Electronic Signature Consent: ${data.consent || ''}
 Parent/Guardian Full Name: ${data.parentName || ''}
 Parent/Guardian Email: ${data.parentEmail || ''}
-Signature Date: ${formatDate(data.signatureDate)}
-
-Cheers!
-Contact Numbers:
-🇩🇪 Germany: +49 176 24217059
-🇺🇸 USA: +01 917 97527709
-Website: williamacampbell.com`;
+Signature Date: ${formatDate(data.signatureDate)}`;
                 
                 
-                // Check email body length and trim refund policy if needed
-                let finalEmailBody = emailBody;
-                if (emailBody.length > 4000) {
-                    // Remove refund policy section if email is too long
-                    finalEmailBody = emailBody.replace(/\n\nREFUND POLICY[\s\S]*?NO REFUNDS WILL BE GIVEN ONCE THE FIRST GAME HAS BEEN PLAYED IN THE PLAYER'S DIVISION\.\n\n/, '\n\n');
-                }
-
-                // DEBUG: Log email body lengths and content
-                console.log('DEBUG emailBody length:', emailBody.length);
-                console.log('DEBUG finalEmailBody length:', finalEmailBody.length);
-                console.log('DEBUG refund policy trimming fired:', emailBody.length > 4000);
-                console.log('DEBUG finalEmailBody first 200 chars:', finalEmailBody.substring(0, 200));
-                console.log('DEBUG finalEmailBody last 200 chars:', finalEmailBody.substring(finalEmailBody.length - 200));
-
-                // Create mailto link with full email body
                 const subject = `Blacktop Basketball Registration - ${data.firstName} ${data.lastName}`;
-                const mailtoLink = `mailto:robertjanice@bellsouth.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(finalEmailBody)}`;
-                
-                // Copy full email to clipboard as backup
-                navigator.clipboard.writeText(emailBody).then(() => {
-                    // Open email client with full email body
-                    try {
-                        window.location.href = mailtoLink;
-                    } catch (error) {
-                        alert('Please copy the registration data from your clipboard and send it to robertjanice@bellsouth.net');
-                    }
-                }).catch(err => {
-                    // Fallback if clipboard fails
-                    alert('Please copy the registration data manually and send it to robertjanice@bellsouth.net');
-                    console.log('Full email body:', emailBody);
-                });
-                
-                // Send data to Google Sheets with proper error handling
-                // Try the original endpoint first
+                const emailLink = document.getElementById('registrationEmail');
+                emailLink.href = `mailto:robertjanice@bellsouth.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+
                 const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzk20KTG4xf9Whu2ivEtGX1al5zyVJEjQIZxPzjau1LYIw0NUVUwv62CCYzPZPdIkm3ag/exec';
-                
-                // Add division to data
-                data.division = division;
-                
-                
-                // Convert to URL-encoded format for Google Sheets
-                // Use FormData instead of URLSearchParams for better compatibility
-                const sheetFormData = new FormData();
-                Object.keys(data).forEach(key => {
-                    if (data[key] !== null && data[key] !== undefined) {
-                        sheetFormData.append(key, data[key]);
-                    }
-                });
-                
-                // Also try URLSearchParams as backup
-                const params = new URLSearchParams();
-                Object.keys(data).forEach(key => {
-                    if (data[key] !== null && data[key] !== undefined) {
-                        params.append(key, data[key]);
-                    }
-                });
-                
-                
-                // Try GET method first (most reliable for Google Apps Script)
-                const getUrl = `${SHEET_ENDPOINT}?${params.toString()}`;
-                
-                fetch(getUrl, {
-                    method: 'GET',
-                    mode: 'no-cors'
-                }).catch(err => {
-                    // Fallback: Try POST with FormData
-                    fetch(SHEET_ENDPOINT, {
+                const result = document.getElementById('submissionResult');
+                const title = document.getElementById('resultTitle');
+                const detail = document.getElementById('resultDetail');
+                result.hidden = true;
+                button.disabled = true;
+                button.textContent = 'Submitting…';
+                form.dataset.registrationId ||= crypto.randomUUID();
+                data.registrationId = form.dataset.registrationId;
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 20000);
+                try {
+                    const response = await fetch(SHEET_ENDPOINT, {
                         method: 'POST',
-                        mode: 'no-cors',
-                        body: sheetFormData
-                    }).catch(err2 => {
-                        // Silent fallback
+                        body: new URLSearchParams(data),
+                        signal: controller.signal
                     });
-                });
-                
-                return false; // Prevent form submission
+                    if (!response.ok) throw new Error('Registration request failed');
+                    const receipt = await response.json();
+                    if (receipt?.success !== true) throw new Error('Missing registration receipt');
+                    form.hidden = true;
+                    title.textContent = 'Thank you for registering!';
+                    detail.textContent = 'Blacktop Basketball received your registration. See you on the court!';
+                    emailLink.textContent = 'Email a copy to Robert';
+                } catch {
+                    title.textContent = 'We couldn’t confirm your registration.';
+                    detail.textContent = 'Your entries are still here. You can email the completed form to Robert. Choose the link below, then press Send in your mail app.';
+                    emailLink.textContent = 'Email registration to Robert';
+                    button.disabled = false;
+                    button.textContent = 'Submit Registration';
+                } finally {
+                    clearTimeout(timeout);
+                    result.hidden = false;
+                    result.focus();
+                }
             });
         });
     </script>
