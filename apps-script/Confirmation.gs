@@ -8,8 +8,8 @@ function doPost(e) {
   return handleSubmission(e);
 }
 
-function registrationReceipt(success) {
-  return ContentService.createTextOutput(JSON.stringify({ success: success }))
+function registrationReceipt(success, emailsSent, retryEmails) {
+  return ContentService.createTextOutput(JSON.stringify({ success: success, emailsSent: emailsSent === true, retryEmails: retryEmails === true }))
     .setMimeType(ContentService.MimeType.JSON);
 }
 
@@ -24,6 +24,7 @@ function handleSubmission(e) {
   const id = data.registrationId || Utilities.getUuid();
   if (!/^[a-f0-9-]{36}$/i.test(id)) return registrationReceipt(false);
   const lock = LockService.getScriptLock();
+  let saved = false;
   try {
     lock.waitLock(10000);
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Form Responses 1');
@@ -35,42 +36,67 @@ function handleSubmission(e) {
       if (idColumn > sheet.getMaxColumns()) sheet.insertColumnAfter(width);
       sheet.getRange(1, idColumn).setValue('Blacktop registration ID');
     }
+    // Keep per-recipient status so retries only send outstanding messages.
+    const deliveryColumns = ['Blacktop organizer email', 'Blacktop guardian email'].map(label => {
+      const existing = headers.indexOf(label);
+      if (existing >= 0) return existing + 1;
+      const column = sheet.getLastColumn() + 1;
+      if (column > sheet.getMaxColumns()) sheet.insertColumnAfter(column - 1);
+      sheet.getRange(1, column).setValue(label);
+      return column;
+    });
     const count = sheet.getLastRow() - 1;
-    if (count && sheet.getRange(2, idColumn, count, 1).createTextFinder(id)
-        .matchEntireCell(true).findNext()) return registrationReceipt(true);
-
-    const medical = [data.medicalConditions, data.medicalDetails].filter(Boolean).join(' - ');
-    const row = [new Date(), data.firstName, data.lastName, data.parentEmail, data.phone,
-      data.division, data.cashPaid, data.cashAmount, data.cashApp, data.cashAppAmount,
-      data.parentName, medical, 'Electronic consent: ' + data.consent];
-    while (row.length < idColumn) row.push('');
-    row[idColumn - 1] = id;
-    sheet.appendRow(row.map(value => typeof value === 'string' && /^[=+@-]/.test(value)
-      ? "'" + value : (value || '')));
-    SpreadsheetApp.flush();
-  } catch (err) {
-    console.error('Registration save failed', err.name);
-    return registrationReceipt(false);
+    const previous = count > 0 && sheet.getRange(2, idColumn, count, 1)
+      .createTextFinder(id).matchEntireCell(true).findNext();
+    let rowNumber;
+    if (previous) {
+      rowNumber = previous.getRow();
+      const original = sheet.getRange(rowNumber, 2, 1, 3).getDisplayValues()[0];
+      if (original[0] !== data.firstName || original[1] !== data.lastName ||
+          original[2] !== data.parentEmail) return registrationReceipt(false);
+    } else {
+      const medical = [data.medicalConditions, data.medicalDetails].filter(Boolean).join(' - ');
+      const row = [new Date(), data.firstName, data.lastName, data.parentEmail, data.phone,
+        data.division, data.cashPaid, data.cashAmount, data.cashApp, data.cashAppAmount,
+        data.parentName, medical, 'Electronic consent: ' + data.consent];
+      while (row.length < idColumn) row.push('');
+      row[idColumn - 1] = id;
+      sheet.appendRow(row.map(value => typeof value === 'string' && /^[=+@-]/.test(value)
+        ? "'" + value : (value || '')));
+      rowNumber = sheet.getLastRow();
+      for (const column of deliveryColumns) sheet.getRange(rowNumber, column).setValue('pending');
+      SpreadsheetApp.flush();
+    }
+    saved = true;
+    const send = [
+      () => MailApp.sendEmail({
+        to: 'robertjanice@bellsouth.net',
+        subject: 'Blacktop Basketball Registration - ' + data.firstName + ' ' + data.lastName,
+        body: registrationEmailBody(data)
+      }),
+      () => sendBlacktopThankYou(data)
+    ];
+    const statuses = deliveryColumns.map((column, i) => {
+      const cell = sheet.getRange(rowNumber, column);
+      const status = cell.getValue();
+      if (status !== 'pending') return status;
+      try {
+        send[i]();
+      } catch (error) {
+        console.error('Email send failed for registration ' + id + ', recipient type ' + i);
+        return 'pending';
+      }
+      cell.setValue('sent');
+      SpreadsheetApp.flush();
+      return 'sent';
+    });
+    return registrationReceipt(true, statuses.every(status => status === 'sent'), statuses.includes('pending'));
+  } catch (error) {
+    console.error('Registration processing failed', error.name);
+    return registrationReceipt(saved);
   } finally {
     if (lock.hasLock()) lock.releaseLock();
   }
-
-  // A saved registration stays successful even if an email fails.
-  try {
-    MailApp.sendEmail({
-      to: 'robertjanice@bellsouth.net',
-      subject: 'Blacktop Basketball Registration - ' + data.firstName + ' ' + data.lastName,
-      body: registrationEmailBody(data)
-    });
-  } catch (err) {
-    console.error('Organizer email failed for registration ' + id);
-  }
-  try {
-    sendBlacktopThankYou(data);
-  } catch (err) {
-    console.error('Guardian email failed for registration ' + id);
-  }
-  return registrationReceipt(true);
 }
 
 function registrationEmailBody(data) {
