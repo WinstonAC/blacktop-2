@@ -1,8 +1,8 @@
 // Run once in the spreadsheet-bound Apps Script editor before deploying.
 function configureRegistrationSheet() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  if (!spreadsheet || !spreadsheet.getSheetByName('Form Responses 1')) {
-    throw new Error('Open Apps Script from the registration spreadsheet containing Form Responses 1.');
+  if (!spreadsheet || !spreadsheet.getSheets().some(tab => tab.getSheetId() === 0)) {
+    throw new Error('Open Apps Script from the registration spreadsheet containing the linked tab (gid=0).');
   }
   PropertiesService.getScriptProperties().setProperty('BLACKTOP_SHEET_ID', spreadsheet.getId());
 }
@@ -36,7 +36,7 @@ function handleSubmission(e) {
     lock.waitLock(10000);
     const sheetId = PropertiesService.getScriptProperties().getProperty('BLACKTOP_SHEET_ID');
     if (!sheetId) throw new Error('Run configureRegistrationSheet in the bound editor first.');
-    const sheet = SpreadsheetApp.openById(sheetId).getSheetByName('Form Responses 1');
+    const sheet = SpreadsheetApp.openById(sheetId).getSheets().find(tab => tab.getSheetId() === 0);
     if (!sheet) throw new Error('Registration sheet tab is missing.');
     const width = Math.max(13, sheet.getLastColumn());
     const headers = sheet.getRange(1, 1, 1, width).getValues()[0];
