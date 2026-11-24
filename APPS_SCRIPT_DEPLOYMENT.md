@@ -1,42 +1,101 @@
-# Fix Blacktop registration submit errors
+# Blacktop registration — get live again (email only)
 
-When parents see **“We couldn’t confirm your registration”**, the public form is working but the **Google Apps Script web app** cannot save rows to the registration spreadsheet. That happens if the script was never configured after the last code update.
+Parents fill out the form → script emails **robertjanice@bellsouth.net** → they see a thank-you on screen.
 
-## What you need
+Rows append to your Google Sheet when **BLACKTOP_SHEET_ID** is set. Sheet errors do **not** block submit (email still goes out).
 
-- The **Google Sheet** that stores registrations (opened from your dad’s Google Drive)
-- **Apps Script** opened from that sheet: **Extensions → Apps Script**
-- The code in this repo: [`apps-script/Confirmation.gs`](apps-script/Confirmation.gs)
+**Fall 2026 sheet:** [Blacktop spreadsheet](https://docs.google.com/spreadsheets/d/1IGCe_0FgI2K_C_4meBq7wCYOQzbMH18NxQi1ROp8vJs/edit)
 
-## One-time setup (in Apps Script editor)
+After you add column headings in **row 1**, match this order (**A1 → AD1**, 30 columns). Full copy-paste list is in the repo chat / below.
 
-1. Replace the project’s `Code.gs` (or equivalent) with the full contents of `apps-script/Confirmation.gs` from this repo.
-2. **Save** the project.
-3. In the editor, choose **Run** on **`configureRegistrationSheet`** (not the web app). Approve permissions when prompted.
-4. Run **`configureBlacktopSender`** once with your dad’s sending Gmail (the account that owns/deploys the script), for example in the editor console or as a one-off function call:
-   ```javascript
-   configureBlacktopSender('dad-google-account@gmail.com');
-   ```
-   Use the **Google account email** that should send thank-you messages—not a `@bellsouth.net` address unless that inbox is a Google account used to deploy the script.
-5. **Deploy → Manage deployments → Edit** (pencil) on the existing **Web app** deployment, set **Version** to **New version**, **Execute as: Me**, **Who has access: Anyone**, then **Deploy**.
-6. Copy the **Web app URL** (`.../macros/s/.../exec`). If it changed, update `SHEET_ENDPOINT` in `index.html` and push to GitHub so GitHub Pages picks it up.
+| A | B | C | D | E | F | G | H | I | J |
+|---|---|---|---|---|---|---|---|---|---|
+| Timestamp | Registration ID | First Name | Last Name | Date of Birth | Age | Address Line 1 | Address Line 2 | City | State |
+| **K** | **L** | **M** | **N** | **O** | **P** | **Q** | **R** | **S** | **T** |
+| ZIP | Phone | Alt Phone | Division | Player Type | Jersey Color | Jersey Number | Team | Jersey Size | Shorts Size |
+| **U** | **V** | **W** | **X** | **Y** | **Z** | **AA** | **AB** | **AC** | **AD** |
+| Cash Paid | Cash Amount | CashApp | CashApp Amount | Medical Conditions | Medical Details | Consent | Parent Name | Parent Email | Signature Date |
 
-## Verify
+## No rows on the sheet but email works?
 
-In a browser, open the web app URL with no query string. You should see JSON like `{"success":false}` (that is correct for an empty visit).
+The form can show **success** even when the sheet step failed or was skipped. Common causes:
 
-Submit a test registration on [the live form](https://winstonac.github.io/blacktop-2/). You should see **Thank you for registering!** and a new row in the sheet.
+1. **`BLACKTOP_SHEET_ID` never set** — run `configureBlacktopSheet('1IGCe_0FgI2K_C_4meBq7wCYOQzbMH18NxQi1ROp8vJs')` once in the Apps Script editor (not in the sheet).
+2. **Sheet not shared** — share [this workbook](https://docs.google.com/spreadsheets/d/1IGCe_0FgI2K_C_4meBq7wCYOQzbMH18NxQi1ROp8vJs/edit) with the **same Google account** as **Deploy → Execute as: Me** (Editor).
+3. **Old deployed code** — paste latest `Confirmation.gs` into `Code.gs`, Save, **Deploy → New version**.
+4. **Wrong tab** — script uses the first tab (`gid=0`) if none of the preferred names match; data still appends to **row 2+**, not row 1 headers.
 
-## Email behavior
+**Tomorrow:** In [Apps Script](https://script.google.com) → **Executions** — look for `Sheet backup failed` or errors on `openById`. Then run **`fullSmokeTestWithSheet()`**.
 
-- **Organizer**: Registration details go to `robertjanice@bellsouth.net` (plain body, no personal footer).
-- **Parent thank-you**: Sent from the configured Blacktop Google account when `configureBlacktopSender` matches the deploying user.
-- **“Sent from my iPhone”** / **“Forwarded Message”**: Added by the sender’s mail app, not the form.
+## 0. Link the spreadsheet (one time)
 
-## Checkbox reminder (already on the live form)
+1. Share that sheet with the same Google account that owns the Apps Script project (Editor).
+2. In the Apps Script editor, choose **`linkBlacktopRegistrationSheet`** in the function dropdown → **Run** (do **not** run `configureBlacktopSheet` alone — it needs the ID argument).
 
-If a parent submits without checking consent, the form blocks submit and shows: *Please check the box to agree to the terms before submitting.*
+3. Authorize **spreadsheets** if prompted.
+4. Optional sheet-only smoke test (no live form): run `smokeTestSheetAppend()`, confirm a **SMOKE TEST** row, delete that row.
 
----
+## 1. Update Apps Script code
 
-**Live form:** https://winstonac.github.io/blacktop-2/
+1. Open the **Blacktop** project in [script.google.com](https://script.google.com).
+2. Replace **all** code in `Code.gs` with the contents of [`apps-script/Confirmation.gs`](apps-script/Confirmation.gs) from this repo (email-only version).
+3. **Save**.
+
+## 2. Deploy (Blacktop 2026)
+
+1. **Deploy → Manage deployments**
+2. Select **Blacktop 2026** → **Edit** (pencil)
+3. **Version: New version**
+4. **Execute as:** Me  
+5. **Who has access:** Anyone  
+6. **Deploy**
+
+The URL should stay:
+
+`https://script.google.com/macros/s/AKfycbzL_g7_gJ50kngSZ7Xeij5OXjfOQ_kq9JBi1PUqTp8QBeOfRW4dBc7n_2RsrAbNT70sEw/exec`
+
+(If the URL changes, update `SHEET_ENDPOINT` in `index.html` on GitHub.)
+
+## 3. Authorize email (first time)
+
+1. In the editor, run `doGet` once (or submit a test registration).
+2. Approve permissions for **sending email**.
+3. Redeploy **new version** if Google asks you to.
+
+## Optional: parent thank-you email
+
+Run once in the editor:
+
+```javascript
+configureBlacktopSender('wcampbell0880@gmail.com');
+```
+
+Use the same Google account that **Execute as: Me** uses. If you skip this, dad still gets every registration; parents just won’t get an auto thank-you.
+
+## Full smoke test (sheet + web)
+
+### A. Sheet only (Apps Script editor)
+
+1. Paste latest [`Confirmation.gs`](apps-script/Confirmation.gs) into **Code.gs**, **Save**.
+2. Run `configureBlacktopSheet('1IGCe_0FgI2K_C_4meBq7wCYOQzbMH18NxQi1ROp8vJs')` if not done yet.
+3. Row 1 must have all **30** headers (A1–AD1).
+4. Run **`fullSmokeTestWithSheet()`** → should log **PASS — row N has 30 columns**.
+5. Open the [sheet](https://docs.google.com/spreadsheets/d/1IGCe_0FgI2K_C_4meBq7wCYOQzbMH18NxQi1ROp8vJs/edit), confirm **SMOKE / FULLTEST**, delete test row(s).
+
+### B. Web app (email + sheet)
+
+From this repo:
+
+```bash
+node scripts/smoke-test-web.mjs
+```
+
+Or submit the real form locally (`index.html`) with test data.
+
+**PASS:** JSON `{"success":true,...}` and a new sheet row. **FAIL:** HTML error page or `success:false`.
+
+After smoke tests, delete rows where Last Name is **FULLTEST** or **TEST** and remove test emails to robertjanice@bellsouth.net.
+
+## Live form
+
+Submit on https://winstonac.github.io/blacktop-2/ — thank-you on screen and Coach Mitchell gets the email.

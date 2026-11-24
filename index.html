@@ -42,6 +42,17 @@
             font-weight: bold;
             margin-bottom: 20px;
             color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .header-basketball {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            display: block;
         }
 
         /* Form Section Styles */
@@ -780,7 +791,13 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>BLACKTOP BASKETBALL REGISTRATION FORM</h1>
+            <h1>
+                <svg class="header-basketball" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <circle cx="12" cy="12" r="11" fill="#E8710A" stroke="#1a1a1a" stroke-width="0.5"/>
+                    <path fill="none" stroke="#1a1a1a" stroke-width="0.9" d="M12 1c3.2 4.5 3.2 17.5 0 22M1 12h22M3.5 5.5c5 3.5 12.5 3.5 17.5 0M3.5 18.5c5-3.5 12.5-3.5 17.5 0"/>
+                </svg>
+                BLACKTOP BASKETBALL REGISTRATION FORM
+            </h1>
         </div>
 
         <form id="regForm">
